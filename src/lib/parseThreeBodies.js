@@ -25,14 +25,11 @@ function parseKoreanEntries(source) {
 
 function parseEnglishEntries(source) {
   const pattern = /(\d+)문단:\s*([\s\S]*?)(?=\n\s*\d+문단:|\s*$)/g;
-  const entries = [];
+  const entries = new Map();
   let match;
 
   while ((match = pattern.exec(source)) !== null) {
-    entries.push({
-      number: Number(match[1]),
-      english: normalizeWhitespace(match[2]),
-    });
+    entries.set(Number(match[1]), normalizeWhitespace(match[2]));
   }
 
   return entries;
@@ -54,53 +51,32 @@ function parseToc(source) {
   return chapters;
 }
 
-function chapterForNumber(number, chapters) {
-  return chapters.find((chapter) => number >= chapter.start && number <= chapter.end) ?? null;
-}
-
-export function buildBookData() {
+export function buildPrayerData() {
   const koreanEntries = parseKoreanEntries(koSource);
-  const englishMap = new Map(
-    parseEnglishEntries(enSource).map((entry) => [entry.number, entry.english]),
-  );
-  const chapters = parseToc(tocSource);
+  const englishEntries = parseEnglishEntries(enSource);
+  const toc = parseToc(tocSource);
 
-  return koreanEntries.map((entry) => {
-    const chapter = chapterForNumber(entry.number, chapters);
-    const chapterIndex = chapter ? chapters.indexOf(chapter) + 1 : 0;
-    const localIndex = chapter ? entry.number - chapter.start + 1 : entry.number;
-
-    return {
-      id: `${chapterIndex || 0}.${localIndex}`,
-      paragraphNumber: entry.number,
-      chapterIndex,
-      chapterTitle: chapter?.title ?? '기타',
-      title: `문단 ${entry.number}`,
-      text: {
-        tibetan: entry.tibetan,
-        korean: entry.korean,
-        english: englishMap.get(entry.number) ?? '',
-      },
-    };
-  });
+  return toc.map((chapter, chapterIndex) => ({
+    id: String(chapterIndex + 1),
+    chapterName: chapter.title,
+    title: chapter.title,
+    verses: koreanEntries
+      .filter((entry) => entry.number >= chapter.start && entry.number <= chapter.end)
+      .map((entry) => ({
+        id: `${chapterIndex + 1}.${entry.number - chapter.start + 1}`,
+        title: `문단 ${entry.number}`,
+        paragraphNumber: entry.number,
+        chapterTitle: chapter.title,
+        text: {
+          tibetan: entry.tibetan,
+          pronunciation: '',
+          english: englishEntries.get(entry.number) ?? '',
+          korean: entry.korean,
+        },
+      })),
+  }));
 }
 
-export function buildChapters(entries) {
-  const chapterMap = new Map();
-
-  entries.forEach((entry) => {
-    const key = `${entry.chapterIndex}-${entry.chapterTitle}`;
-
-    if (!chapterMap.has(key)) {
-      chapterMap.set(key, {
-        id: String(entry.chapterIndex),
-        title: entry.chapterTitle,
-        verses: [],
-      });
-    }
-
-    chapterMap.get(key).verses.push(entry);
-  });
-
-  return Array.from(chapterMap.values());
+export function flattenVerses(prayers) {
+  return prayers.flatMap((chapter) => chapter.verses ?? []);
 }
