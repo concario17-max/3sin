@@ -7,7 +7,8 @@ function normalizeWhitespace(value) {
 }
 
 function parseKoreanEntries(source) {
-  const pattern = /(\d+)\.\s*\[티벳어 원문\]\s*([\s\S]*?)\s*\[한국어 번역\]\s*([\s\S]*?)(?=\n\d+\.\s*\[티벳어 원문\]|\s*$)/g;
+  const pattern =
+    /(\d+)\.\s*\[티벳어 원문\]\s*([\s\S]*?)\s*\[한국어 번역\]\s*([\s\S]*?)(?=\n\d+\.\s*\[티벳어 원문\]|\s*$)/g;
   const entries = [];
   let match;
 
@@ -59,7 +60,9 @@ function chapterForNumber(number, chapters) {
 
 export function buildBookData() {
   const koreanEntries = parseKoreanEntries(koSource);
-  const englishMap = new Map(parseEnglishEntries(enSource).map((entry) => [entry.number, entry.english]));
+  const englishMap = new Map(
+    parseEnglishEntries(enSource).map((entry) => [entry.number, entry.english]),
+  );
   const chapters = parseToc(tocSource);
 
   return koreanEntries.map((entry) => {
@@ -87,6 +90,7 @@ export function buildChapters(entries) {
 
   entries.forEach((entry) => {
     const key = `${entry.chapterIndex}-${entry.chapterTitle}`;
+
     if (!chapterMap.has(key)) {
       chapterMap.set(key, {
         id: String(entry.chapterIndex),
@@ -94,6 +98,7 @@ export function buildChapters(entries) {
         verses: [],
       });
     }
+
     chapterMap.get(key).verses.push(entry);
   });
 

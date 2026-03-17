@@ -6,6 +6,7 @@ const chapters = buildChapters(entries);
 
 function App() {
   const [activeId, setActiveId] = React.useState(entries[0]?.id ?? null);
+
   const activeEntry = React.useMemo(
     () => entries.find((entry) => entry.id === activeId) ?? entries[0],
     [activeId],
@@ -30,7 +31,7 @@ function App() {
           <p className="eyebrow">Three Bodies</p>
           <h1>삼신 본문</h1>
           <p className="sidebar__description">
-            `tibet` 본문 포맷을 기준으로, 업로드해주신 텍스트 3개를 연결한 읽기 페이지입니다.
+            `tibet` 본문 포맷을 기준으로, 업로드하신 텍스트 3개를 연결한 React 읽기 페이지입니다.
           </p>
         </div>
 
@@ -45,6 +46,7 @@ function App() {
               <div className="chapter-block__verses">
                 {chapter.verses.map((entry) => {
                   const isActive = entry.id === activeEntry.id;
+
                   return (
                     <button
                       key={entry.id}
@@ -80,7 +82,9 @@ function App() {
 
         <section className="card">
           <p className="section-label">English Rendering</p>
-          <p className="body-text body-text--english">{activeEntry.text.english || '영문 번역 없음'}</p>
+          <p className="body-text body-text--english">
+            {activeEntry.text.english || '영문 번역 없음'}
+          </p>
         </section>
 
         <section className="card card--korean">

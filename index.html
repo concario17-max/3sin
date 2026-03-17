@@ -4,60 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>삼신 본문</title>
-    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <div class="app-backdrop"></div>
-
-      <aside class="sidebar">
-        <div class="sidebar__header">
-          <p class="eyebrow">Three Bodies</p>
-          <h1>삼신 본문</h1>
-          <p class="sidebar__description">
-            `tibet` 본문 포맷을 기준으로, 업로드하신 텍스트 3개를 연결한 읽기 페이지입니다.
-          </p>
-        </div>
-        <div class="sidebar__chapters" id="chapters"></div>
-      </aside>
-
-      <main class="reading-panel">
-        <header class="reading-header">
-          <div class="reading-header__meta" id="reading-meta"></div>
-          <h2 id="reading-title"></h2>
-          <p id="reading-subtitle"></p>
-        </header>
-
-        <section class="card card--tibetan">
-          <p class="section-label">Tibetan Original</p>
-          <div class="tibetan-text" id="tibetan-text"></div>
-        </section>
-
-        <section class="card">
-          <p class="section-label">English Rendering</p>
-          <p class="body-text body-text--english" id="english-text"></p>
-        </section>
-
-        <section class="card card--korean">
-          <p class="section-label">Korean Translation</p>
-          <p class="body-text body-text--korean" id="korean-text"></p>
-        </section>
-
-        <nav class="pager">
-          <button type="button" id="prev-button">이전 문단</button>
-          <button type="button" id="next-button">다음 문단</button>
-        </nav>
-      </main>
-
-      <aside class="info-panel">
-        <div class="info-card">
-          <p class="eyebrow">Overview</p>
-          <h3>현재 선택</h3>
-          <dl id="overview"></dl>
-        </div>
-      </aside>
-    </div>
-
-    <script type="module" src="./app.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
