@@ -50,7 +50,7 @@ function TextPage() {
   };
 
   return (
-    <div className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary xl:bg-transparent">
+    <div className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent">
       <div className="fixed inset-0 z-[-1] pointer-events-none bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
 
       <LeftSidebar prayers={prayers} onSelectVerse={setActiveVerse} activeVerseId={activeVerse?.id} />

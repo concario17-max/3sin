@@ -84,7 +84,7 @@ const RightSidebar = ({ activeVerseId, storagePrefix = 'prayer' }) => {
                 />
             )}
 
-            <aside className={`fixed inset-y-0 right-0 z-50 w-[90vw] sm:w-[400px] xl:w-80 bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-full xl:h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-transform duration-500 xl:translate-x-0 ${isReflectionsOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : 'translate-x-full'} flex flex-col font-inter`}>
+            <aside className={`fixed inset-y-0 right-0 top-16 z-50 w-[90vw] sm:w-[400px] xl:w-80 bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-transform duration-500 xl:translate-x-0 ${isReflectionsOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : 'translate-x-full'} flex flex-col font-inter`}>
 
                 {/* Mobile Close Button */}
                 <div className="xl:hidden absolute top-4 right-4 z-50">
