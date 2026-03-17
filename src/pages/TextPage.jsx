@@ -69,8 +69,8 @@ function TextPage() {
       ) : (
         <StatePanel
           kicker="Select A Passage"
-          title="문단을 먼저 선택해 주세요"
-          description="왼쪽 챕터 목록에서 문단을 고르면 tibet 본문 페이지와 같은 구조로 읽기 화면이 열립니다."
+          title="Select a paragraph to begin"
+          description="Choose a chapter and paragraph from the left sidebar to open the full reading layout."
         />
       )}
     </div>

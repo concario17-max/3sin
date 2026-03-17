@@ -8,7 +8,7 @@ function normalizeWhitespace(value) {
 
 function parseKoreanEntries(source) {
   const pattern =
-    /(\d+)\.\s*\[티벳어 원문\]\s*([\s\S]*?)\s*\[한국어 번역\]\s*([\s\S]*?)(?=\n\d+\.\s*\[티벳어 원문\]|\s*$)/g;
+    /(\d+)\.\s*\[[^\]]+\]\s*([\s\S]*?)\s*\[[^\]]+\]\s*([\s\S]*?)(?=\n\d+\.\s*\[[^\]]+\]|\s*$)/g;
   const entries = [];
   let match;
 
@@ -24,7 +24,7 @@ function parseKoreanEntries(source) {
 }
 
 function parseEnglishEntries(source) {
-  const pattern = /(\d+)문단:\s*([\s\S]*?)(?=\n\s*\d+문단:|\s*$)/g;
+  const pattern = /(\d+)\S*:\s*([\s\S]*?)(?=\n\s*\d+\S*:|\s*$)/g;
   const entries = new Map();
   let match;
 
@@ -36,7 +36,7 @@ function parseEnglishEntries(source) {
 }
 
 function parseToc(source) {
-  const pattern = /(.*?)\s*\(문단\s*(\d+)(?:~\s*문단\s*(\d+))?\)/g;
+  const pattern = /(.*?)\s*\([^0-9]*(\d+)(?:\s*~\s*[^0-9]*(\d+))?\)/g;
   const chapters = [];
   let match;
 
@@ -64,7 +64,7 @@ export function buildPrayerData() {
       .filter((entry) => entry.number >= chapter.start && entry.number <= chapter.end)
       .map((entry) => ({
         id: `${chapterIndex + 1}.${entry.number - chapter.start + 1}`,
-        title: `문단 ${entry.number}`,
+        title: `Paragraph ${entry.number}`,
         paragraphNumber: entry.number,
         chapterTitle: chapter.title,
         text: {

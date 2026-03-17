@@ -1,86 +1,122 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit3, X } from 'lucide-react';
 import { useUI } from '../../context/UIContext';
 import NoteEditor from '../../components/Sidebar/NoteEditor';
 import ReflectionActions from '../../components/Sidebar/ReflectionActions';
 
-function RightSidebar({ activeVerseId }) {
-  const [note, setNote] = React.useState('');
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [showExportMenu, setShowExportMenu] = React.useState(false);
-  const ui = useUI() || { isReflectionsOpen: true, setIsReflectionsOpen: () => {} };
-  const { isReflectionsOpen, setIsReflectionsOpen } = ui;
-  const noteKey = `three-body-note-${activeVerseId}`;
+// 불변성과 기능적 분리 원칙 적용: LocalStorage 연동 Reflections 패널
+const RightSidebar = ({ activeVerseId, storagePrefix = 'prayer' }) => {
+    const [note, setNote] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
+    const [showExportMenu, setShowExportMenu] = useState(false);
 
-  React.useEffect(() => {
-    if (!activeVerseId) return;
-    setNote(localStorage.getItem(noteKey) || '');
-  }, [activeVerseId, noteKey]);
+    const uiContext = useUI() || { isReflectionsOpen: true, setIsReflectionsOpen: () => { } };
+    const { isReflectionsOpen, setIsReflectionsOpen } = uiContext;
 
-  const handleSave = React.useCallback(() => {
-    localStorage.setItem(noteKey, note);
-    setIsSaving(true);
-    setTimeout(() => setIsSaving(false), 900);
-  }, [note, noteKey]);
+    // activeVerseId를 기반으로 LocalStorage 키 생성
+    const noteKey = `tibet-${storagePrefix}-note-${activeVerseId}`;
 
-  const downloadBlob = (name, content) => {
-    const file = new Blob([content], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(file);
-    link.download = name;
-    link.click();
-  };
+    // 구절이 바뀔 때마다 메모 로드
+    useEffect(() => {
+        if (!activeVerseId) return;
+        const savedNote = localStorage.getItem(noteKey);
+        setNote(savedNote || '');
+    }, [activeVerseId, noteKey]);
 
-  return (
-    <>
-      {isReflectionsOpen ? (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm xl:hidden"
-          onClick={() => setIsReflectionsOpen(false)}
-        />
-      ) : null}
+    const handleSave = React.useCallback(() => {
+        if (!activeVerseId) return;
+        setIsSaving(true);
+        localStorage.setItem(noteKey, note);
+        // 저장 피드백을 위한 인위적 지연
+        setTimeout(() => setIsSaving(false), 1000);
+    }, [activeVerseId, noteKey, note]);
 
-      <aside
-        className={`fixed inset-y-0 right-0 z-50 flex h-full w-[90vw] flex-col border-l border-gold-primary/20 bg-white/80 font-inter backdrop-blur-xl transition-transform duration-500 sm:w-[400px] xl:sticky xl:top-0 xl:h-screen xl:w-80 xl:translate-x-0 ${
-          isReflectionsOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : 'translate-x-full'
-        }`}
-      >
-        <div className="absolute right-4 top-4 z-50 xl:hidden">
-          <button onClick={() => setIsReflectionsOpen(false)} className="rounded-full p-2 hover:bg-gold-surface">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+    const handleExportCurrent = React.useCallback(() => {
+        if (!activeVerseId) return;
+        const element = document.createElement("a");
+        const file = new Blob([note], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        element.download = `Tibet_Reflection_${activeVerseId}.txt`;
+        document.body.appendChild(element);
+        element.click();
+        setShowExportMenu(false);
+    }, [activeVerseId, note]);
 
-        <div className="relative flex h-full min-h-0 flex-col p-6">
-          <div className="mb-6 flex shrink-0 items-center gap-2 border-b border-gold-border/30 pb-4">
-            <Edit3 className="h-5 w-5 text-gold-primary" />
-            <h2 className="text-sm font-bold tracking-wide text-text-primary">Reflections</h2>
-          </div>
+    const handleExportAll = React.useCallback(() => {
+        let allNotesText = `Tibet Prayers - All Reflections\n\n`;
+        const noteKeys = Object.keys(localStorage).filter(key => key.startsWith(`tibet-${storagePrefix}-note-`));
 
-          <NoteEditor activeVerseId={activeVerseId} note={note} setNote={setNote} />
-          <ReflectionActions
-            showExportMenu={showExportMenu}
-            setShowExportMenu={setShowExportMenu}
-            handleExportCurrent={() => {
-              downloadBlob(`3SIN_Reflection_${activeVerseId}.txt`, note);
-              setShowExportMenu(false);
-            }}
-            handleExportAll={() => {
-              const content = Object.keys(localStorage)
-                .filter((key) => key.startsWith('three-body-note-'))
-                .sort()
-                .map((key) => `--- ${key.replace('three-body-note-', '')} ---\n${localStorage.getItem(key) || ''}`)
-                .join('\n\n');
-              downloadBlob('3SIN_All_Reflections.txt', content);
-              setShowExportMenu(false);
-            }}
-            handleSave={handleSave}
-            isSaving={isSaving}
-          />
-        </div>
-      </aside>
-    </>
-  );
-}
+        // 키 정렬 로직 (ID가 문자열이므로 문자열 비교 정렬)
+        noteKeys.sort((a, b) => a.localeCompare(b));
 
-export default RightSidebar;
+        noteKeys.forEach(key => {
+            const vId = key.replace(`tibet-${storagePrefix}-note-`, '');
+            const content = localStorage.getItem(key);
+            if (content && content.trim()) {
+                allNotesText += `--- Verse ${vId} ---\n${content}\n\n`;
+            }
+        });
+
+        if (allNotesText === `Tibet Prayers - All Reflections\n\n`) {
+            alert("No saved reflections found to export.");
+            setShowExportMenu(false);
+            return;
+        }
+
+        const element = document.createElement("a");
+        const file = new Blob([allNotesText], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        element.download = `Tibet_All_Reflections.txt`;
+        document.body.appendChild(element);
+        element.click();
+        setShowExportMenu(false);
+    }, []);
+
+    if (!activeVerseId) return null;
+
+    return (
+        <>
+            {/* Mobile Backdrop */}
+            {isReflectionsOpen && (
+                <div
+                    className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm xl:hidden transition-opacity duration-300"
+                    onClick={() => setIsReflectionsOpen(false)}
+                />
+            )}
+
+            <aside className={`fixed inset-y-0 right-0 z-50 w-[90vw] sm:w-[400px] xl:w-80 bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-full xl:h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-transform duration-500 xl:translate-x-0 ${isReflectionsOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : 'translate-x-full'} flex flex-col font-inter`}>
+
+                {/* Mobile Close Button */}
+                <div className="xl:hidden absolute top-4 right-4 z-50">
+                    <button onClick={() => setIsReflectionsOpen(false)} className="p-2 rounded-full hover:bg-gold-surface dark:hover:bg-dark-surface text-text-secondary dark:text-dark-text-secondary transition-colors">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+
+                <div className="p-6 relative flex flex-col h-full min-h-0">
+                    <div className="flex items-center gap-2 mb-6 shrink-0 border-b border-gold-border/30 pb-4">
+                        <Edit3 className="w-5 h-5 text-[#A68B5C] dark:text-gold-light" />
+                        <h2 className="text-sm font-bold text-[#1C2B36] dark:text-dark-text-primary tracking-wide">Reflections</h2>
+                    </div>
+
+                    <NoteEditor
+                        activeVerseId={activeVerseId}
+                        note={note}
+                        setNote={setNote}
+                    />
+
+                    <ReflectionActions
+                        showExportMenu={showExportMenu}
+                        setShowExportMenu={setShowExportMenu}
+                        handleExportCurrent={handleExportCurrent}
+                        handleExportAll={handleExportAll}
+                        handleSave={handleSave}
+                        isSaving={isSaving}
+                    />
+                </div>
+            </aside>
+        </>
+    );
+};
+
+export default React.memo(RightSidebar, (prevProps, nextProps) => prevProps.activeVerseId === nextProps.activeVerseId);
