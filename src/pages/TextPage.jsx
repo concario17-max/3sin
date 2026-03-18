@@ -54,6 +54,10 @@ function TextPage() {
   const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
   const ui = useUI() || { isSidebarOpen: true };
   const { isSidebarOpen } = ui;
+  const layoutVars = React.useMemo(() => ({
+    '--desktop-left-sidebar-width': '400px',
+    '--desktop-right-sidebar-width': '400px',
+  }), []);
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {
@@ -71,7 +75,10 @@ function TextPage() {
   };
 
   return (
-    <div className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent">
+    <div
+      className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent"
+      style={layoutVars}
+    >
       <div className="fixed inset-0 z-[-1] pointer-events-none bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
 
       <LeftSidebar chapters={chapters} onSelectParagraph={setActiveParagraph} activeParagraphId={activeParagraph?.id} />
