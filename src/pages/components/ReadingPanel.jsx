@@ -33,11 +33,13 @@ const itemVariants = {
 
 const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNext }) => {
     const audioPlaylist = React.useMemo(() => {
-        return verse.audioUrl ? [{ id: verse.id, title: verse.title, url: verse.audioUrl }] : [];
-    }, [verse.id, verse.title, verse.audioUrl]);
+        const verseId = typeof verse?.id === 'string' ? verse.id : '';
+        return verse?.audioUrl ? [{ id: verseId, title: verse.title, url: verse.audioUrl }] : [];
+    }, [verse?.id, verse?.title, verse?.audioUrl]);
 
     const { isPlaying, progress, currentTime, duration, togglePlay, seek } = useAudioPlayer(audioPlaylist);
-    const [chapterStr, verseStr] = verse.id.split('.');
+    const verseId = typeof verse?.id === 'string' ? verse.id : '';
+    const [chapterStr = '', verseStr = ''] = verseId.split('.');
 
     return (
         <motion.main
@@ -52,7 +54,7 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
                         chapterStr={chapterStr}
                         verseStr={verseStr}
                         globalIndex={globalIndex}
-                        verseId={verse.id}
+                        verseId={verseId}
                         title={verse.title}
                         chapterTitle={verse.chapterTitle}
                     />
@@ -84,7 +86,7 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
                 <motion.div variants={itemVariants}>
                     <NavigationPill
                         globalIndex={globalIndex}
-                        verseId={verse.id}
+                        verseId={verseId}
                         onPrevious={onPrevious}
                         onNext={onNext}
                     />
@@ -94,4 +96,4 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
     );
 };
 
-export default React.memo(ReadingPanel, (prevProps, nextProps) => prevProps.verse.id === nextProps.verse.id);
+export default React.memo(ReadingPanel, (prevProps, nextProps) => prevProps.verse?.id === nextProps.verse?.id);

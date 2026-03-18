@@ -9,13 +9,27 @@ const chapters = buildReadingData();
 const ACTIVE_PARAGRAPH_STORAGE_KEY = 'three_body_active_verse';
 const LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY = 'tibet_active_verse';
 
+function isValidStoredParagraph(value) {
+  return (
+    value &&
+    typeof value === 'object' &&
+    typeof value.id === 'string' &&
+    typeof value.title === 'string' &&
+    value.text &&
+    typeof value.text === 'object'
+  );
+}
+
 function loadStoredActiveParagraph(fallbackParagraph) {
   try {
     const saved =
       localStorage.getItem(ACTIVE_PARAGRAPH_STORAGE_KEY) ??
       localStorage.getItem(LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY);
 
-    return saved ? JSON.parse(saved) : fallbackParagraph;
+    if (!saved) return fallbackParagraph;
+
+    const parsed = JSON.parse(saved);
+    return isValidStoredParagraph(parsed) ? parsed : fallbackParagraph;
   } catch {
     return fallbackParagraph;
   }
@@ -45,7 +59,7 @@ function TextPage() {
   const { isSidebarOpen } = ui;
 
   React.useEffect(() => {
-    if (activeParagraph) {
+    if (isValidStoredParagraph(activeParagraph)) {
       localStorage.setItem(ACTIVE_PARAGRAPH_STORAGE_KEY, JSON.stringify(activeParagraph));
     }
   }, [activeParagraph]);
