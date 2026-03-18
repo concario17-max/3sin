@@ -51,7 +51,7 @@ function parseToc(source) {
   return chapters;
 }
 
-export function buildPrayerData() {
+export function buildReadingData() {
   const koreanEntries = parseKoreanEntries(koSource);
   const englishEntries = parseEnglishEntries(enSource);
   const toc = parseToc(tocSource);
@@ -60,7 +60,7 @@ export function buildPrayerData() {
     id: String(chapterIndex + 1),
     chapterName: chapter.title,
     title: chapter.title,
-    verses: koreanEntries
+    paragraphs: koreanEntries
       .filter((entry) => entry.number >= chapter.start && entry.number <= chapter.end)
       .map((entry) => ({
         id: `${chapterIndex + 1}.${entry.number - chapter.start + 1}`,
@@ -77,6 +77,18 @@ export function buildPrayerData() {
   }));
 }
 
+export function flattenParagraphs(chapters) {
+  return chapters.flatMap((chapter) => chapter.paragraphs ?? []);
+}
+
+// Legacy aliases kept for compatibility with older imports during cleanup.
+export function buildPrayerData() {
+  return buildReadingData().map((chapter) => ({
+    ...chapter,
+    verses: chapter.paragraphs,
+  }));
+}
+
 export function flattenVerses(prayers) {
-  return prayers.flatMap((chapter) => chapter.verses ?? []);
+  return prayers.flatMap((chapter) => chapter.verses ?? chapter.paragraphs ?? []);
 }
