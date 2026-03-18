@@ -1,36 +1,36 @@
 import React from 'react';
 
-const SidebarVerseList = ({ prayers, expandedChapter, activeVerseId, verseGlobalIndices, onSelectVerse, setIsSidebarOpen }) => {
+const SidebarVerseList = ({ chapters, expandedChapter, activeParagraphId, paragraphIndices, onSelectParagraph, setIsSidebarOpen }) => {
     if (!expandedChapter) return null;
 
     let foundChapter = null;
-    for (const prayer of prayers) {
-        if (prayer.id === expandedChapter) {
-            foundChapter = prayer;
+    for (const chapter of chapters) {
+        if (chapter.id === expandedChapter) {
+            foundChapter = chapter;
             break;
         }
-        if (prayer.isGroup && prayer.subchapters) {
-            const sub = prayer.subchapters.find(s => `${prayer.id}-${s.id}` === expandedChapter);
-            if (sub) {
-                foundChapter = sub;
+        if (chapter.isGroup && chapter.subchapters) {
+            const subchapter = chapter.subchapters.find((item) => `${chapter.id}-${item.id}` === expandedChapter);
+            if (subchapter) {
+                foundChapter = subchapter;
                 break;
             }
         }
     }
 
-    if (!foundChapter || !foundChapter.verses) return null;
+    if (!foundChapter || !foundChapter.paragraphs) return null;
 
     return (
         <div className="flex-1 overflow-y-auto bg-transparent custom-scrollbar h-full animate-[fadeIn_0.5s_ease-out]">
             <div className="py-2 px-3 space-y-0.5">
-                {foundChapter.verses.map((verse) => {
-                    const isActive = activeVerseId === verse.id;
+                {foundChapter.paragraphs.map((paragraph) => {
+                    const isActive = activeParagraphId === paragraph.id;
 
                     return (
                         <button
-                            key={verse.id}
+                            key={paragraph.id}
                             onClick={() => {
-                                if (onSelectVerse) onSelectVerse(verse);
+                                if (onSelectParagraph) onSelectParagraph(paragraph);
                                 if (window.innerWidth < 1024) setIsSidebarOpen(false);
                             }}
                             className={`w-full flex items-start text-left gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${isActive
@@ -39,10 +39,10 @@ const SidebarVerseList = ({ prayers, expandedChapter, activeVerseId, verseGlobal
                                 }`}
                         >
                             <span className={`min-w-[40px] whitespace-nowrap font-bold text-xs mt-[3px] ${isActive ? 'text-gold-primary' : 'text-text-secondary/60 dark:text-dark-text-secondary/60'}`}>
-                                {verseGlobalIndices[verse.id] || verse.id}
+                                {paragraphIndices[paragraph.id] || paragraph.id}
                             </span>
                             <span className="truncate opacity-90 text-[13px] leading-relaxed font-noto break-keep">
-                                {verse.text?.tibetan || verse.chapterTitle || verse.title}
+                                {paragraph.text?.tibetan || paragraph.chapterTitle || paragraph.title}
                             </span>
                         </button>
                     );
