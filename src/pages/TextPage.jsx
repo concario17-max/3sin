@@ -1,10 +1,25 @@
 import React from 'react';
-import { buildPrayerData, flattenVerses } from '../lib/parseThreeBodies';
+import { buildReadingData, flattenParagraphs } from '../lib/parseThreeBodies';
+import { useUI } from '../context/UIContext';
 import LeftSidebar from './components/LeftSidebar';
 import ReadingPanel from './components/ReadingPanel';
 import RightSidebar from './components/RightSidebar';
 
-const prayers = buildPrayerData();
+const chapters = buildReadingData();
+const ACTIVE_PARAGRAPH_STORAGE_KEY = 'three_body_active_verse';
+const LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY = 'tibet_active_verse';
+
+function loadStoredActiveParagraph(fallbackParagraph) {
+  try {
+    const saved =
+      localStorage.getItem(ACTIVE_PARAGRAPH_STORAGE_KEY) ??
+      localStorage.getItem(LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY);
+
+    return saved ? JSON.parse(saved) : fallbackParagraph;
+  } catch {
+    return fallbackParagraph;
+  }
+}
 
 function StatePanel({ kicker, title, description }) {
   return (
@@ -24,47 +39,45 @@ function StatePanel({ kicker, title, description }) {
 }
 
 function TextPage() {
-  const flatVerses = React.useMemo(() => flattenVerses(prayers), []);
-  const [activeVerse, setActiveVerse] = React.useState(() => {
-    try {
-      const saved = localStorage.getItem('three_body_active_verse');
-      return saved ? JSON.parse(saved) : flatVerses[0] ?? null;
-    } catch {
-      return flatVerses[0] ?? null;
-    }
-  });
+  const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
+  const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null));
+  const ui = useUI() || { isSidebarOpen: true };
+  const { isSidebarOpen } = ui;
 
   React.useEffect(() => {
-    if (activeVerse) {
-      localStorage.setItem('three_body_active_verse', JSON.stringify(activeVerse));
+    if (activeParagraph) {
+      localStorage.setItem(ACTIVE_PARAGRAPH_STORAGE_KEY, JSON.stringify(activeParagraph));
     }
-  }, [activeVerse]);
+  }, [activeParagraph]);
 
-  const currentIndex = activeVerse ? flatVerses.findIndex((verse) => verse.id === activeVerse.id) : -1;
+  const currentIndex = activeParagraph ? flatParagraphs.findIndex((paragraph) => paragraph.id === activeParagraph.id) : -1;
   const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex !== -1 && currentIndex < flatVerses.length - 1;
+  const hasNext = currentIndex !== -1 && currentIndex < flatParagraphs.length - 1;
 
   const handleNavigate = (direction) => {
-    if (direction === 'prev' && hasPrev) setActiveVerse(flatVerses[currentIndex - 1]);
-    if (direction === 'next' && hasNext) setActiveVerse(flatVerses[currentIndex + 1]);
+    if (direction === 'prev' && hasPrev) setActiveParagraph(flatParagraphs[currentIndex - 1]);
+    if (direction === 'next' && hasNext) setActiveParagraph(flatParagraphs[currentIndex + 1]);
   };
 
   return (
     <div className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent">
       <div className="fixed inset-0 z-[-1] pointer-events-none bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
 
-      <LeftSidebar prayers={prayers} onSelectVerse={setActiveVerse} activeVerseId={activeVerse?.id} />
+      <LeftSidebar chapters={chapters} onSelectParagraph={setActiveParagraph} activeParagraphId={activeParagraph?.id} />
 
-      {activeVerse ? (
+      {activeParagraph ? (
         <>
           <ReadingPanel
-            verse={activeVerse}
+            verse={activeParagraph}
             globalIndex={currentIndex + 1}
             hideAudio={true}
             onPrevious={hasPrev ? () => handleNavigate('prev') : null}
             onNext={hasNext ? () => handleNavigate('next') : null}
           />
-          <RightSidebar activeVerseId={activeVerse.id} />
+          <RightSidebar
+            activeVerseId={activeParagraph.id}
+            chapterSidebarOpen={isSidebarOpen}
+          />
         </>
       ) : (
         <StatePanel
