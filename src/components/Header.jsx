@@ -22,9 +22,14 @@ function Header() {
 
       <div className="pointer-events-auto flex flex-none items-center justify-center gap-3">
         <span className="text-[24px] text-gold-primary sm:text-[28px]">III</span>
-        <span className="whitespace-nowrap font-serif text-[14px] font-bold uppercase tracking-[0.1em] text-charcoal-main sm:text-[17px] sm:tracking-[0.15em]">
-          The Three Bodies
-        </span>
+        <div className="flex flex-col items-center leading-none">
+          <span className="font-serif text-[13px] font-bold tracking-[0.03em] text-charcoal-main sm:text-[16px]">
+            밀교의 성불 원리
+          </span>
+          <span className="font-serif text-[10px] tracking-[0.08em] text-gold-primary/80 sm:text-[11px]">
+            因位三身行相明燈論
+          </span>
+        </div>
       </div>
 
       <div className="flex flex-1 justify-end xl:hidden">

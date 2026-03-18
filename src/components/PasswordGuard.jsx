@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 
 function PasswordGuard({ children }) {
   const [password, setPassword] = useState('');
-  const [isAuthorized, setIsAuthorized] = useState(() => localStorage.getItem('three_body_authorized') === 'true');
+  const [isAuthorized, setIsAuthorized] = useState(
+    () => localStorage.getItem('three_body_authorized') === 'true',
+  );
   const [error, setError] = useState(false);
 
   const handleLogin = (event) => {
@@ -55,7 +57,10 @@ function PasswordGuard({ children }) {
 
           <div className="space-y-2">
             <h1 className="text-3xl italic tracking-tight text-[#B29A62]">Access Restricted</h1>
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B29A62]/60">THE THREE BODIES</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B29A62]/60">
+              밀교의 성불 원리
+            </p>
+            <p className="text-[11px] tracking-[0.08em] text-[#B29A62]/75">因位三身行相明燈論</p>
           </div>
         </div>
 
@@ -66,13 +71,13 @@ function PasswordGuard({ children }) {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter Password"
-              className="h-14 w-full rounded-xl border border-[#D1D1D1] bg-white px-4 text-center text-lg tracking-[0.5em] placeholder:tracking-normal placeholder:text-gray-400 focus:border-[#B29A62] focus:outline-none transition-colors"
+              className="h-14 w-full rounded-xl border border-[#D1D1D1] bg-white px-4 text-center text-lg tracking-[0.5em] placeholder:tracking-normal placeholder:text-gray-400 transition-colors focus:border-[#B29A62] focus:outline-none"
             />
           </motion.div>
 
           <button
             type="submit"
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#111] font-bold tracking-[0.2em] text-white transition-all active:scale-[0.98] hover:bg-black"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#111] font-bold tracking-[0.2em] text-white transition-all hover:bg-black active:scale-[0.98]"
           >
             ENTER GATEWAY
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,7 +92,7 @@ function PasswordGuard({ children }) {
           </div>
 
           <div className="mx-auto max-w-[220px] text-[9px] font-bold uppercase leading-relaxed tracking-[0.2em] text-[#A1A1A1]/40">
-            Dedicated to the contemplative reading of the three bodies text
+            Dedicated to the contemplative reading of the three bodies teaching
           </div>
         </div>
       </motion.div>
