@@ -32,13 +32,17 @@ const itemVariants = {
 };
 
 const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNext }) => {
+    const safeVerse = verse && typeof verse === 'object' ? verse : null;
+    const verseId = typeof safeVerse?.id === 'string' ? safeVerse.id : '';
+    const verseTitle = typeof safeVerse?.title === 'string' ? safeVerse.title : '';
+    const verseChapterTitle = typeof safeVerse?.chapterTitle === 'string' ? safeVerse.chapterTitle : '';
+    const verseAudioUrl = typeof safeVerse?.audioUrl === 'string' ? safeVerse.audioUrl : '';
+    const verseText = safeVerse?.text && typeof safeVerse.text === 'object' ? safeVerse.text : {};
     const audioPlaylist = React.useMemo(() => {
-        const verseId = typeof verse?.id === 'string' ? verse.id : '';
-        return verse?.audioUrl ? [{ id: verseId, title: verse.title, url: verse.audioUrl }] : [];
-    }, [verse?.id, verse?.title, verse?.audioUrl]);
+        return verseAudioUrl ? [{ id: verseId, title: verseTitle, url: verseAudioUrl }] : [];
+    }, [verseAudioUrl, verseId, verseTitle]);
 
     const { isPlaying, progress, currentTime, duration, togglePlay, seek } = useAudioPlayer(audioPlaylist);
-    const verseId = typeof verse?.id === 'string' ? verse.id : '';
     const [chapterStr = '', verseStr = ''] = verseId.split('.');
 
     return (
@@ -55,13 +59,13 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
                         verseStr={verseStr}
                         globalIndex={globalIndex}
                         verseId={verseId}
-                        title={verse.title}
-                        chapterTitle={verse.chapterTitle}
+                        title={verseTitle}
+                        chapterTitle={verseChapterTitle}
                     />
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                    <TibetanSection tibetan={verse.text.tibetan} pronunciation={verse.text.pronunciation} />
+                    <TibetanSection tibetan={verseText.tibetan} pronunciation={verseText.pronunciation} />
                 </motion.div>
 
                 {!hideAudio && (
@@ -73,14 +77,14 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
                             duration={duration}
                             togglePlay={togglePlay}
                             seek={seek}
-                            audioUrl={verse.audioUrl}
+                            audioUrl={verseAudioUrl}
                             formatTime={formatTime}
                         />
                     </motion.div>
                 )}
 
                 <motion.div variants={itemVariants}>
-                    <TranslationSection english={verse.text.english} korean={verse.text.korean} />
+                    <TranslationSection english={verseText.english} korean={verseText.korean} />
                 </motion.div>
 
                 <motion.div variants={itemVariants}>

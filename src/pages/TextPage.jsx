@@ -9,18 +9,7 @@ const chapters = buildReadingData();
 const ACTIVE_PARAGRAPH_STORAGE_KEY = 'three_body_active_verse';
 const LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY = 'tibet_active_verse';
 
-function isValidStoredParagraph(value) {
-  return (
-    value &&
-    typeof value === 'object' &&
-    typeof value.id === 'string' &&
-    typeof value.title === 'string' &&
-    value.text &&
-    typeof value.text === 'object'
-  );
-}
-
-function loadStoredActiveParagraph(fallbackParagraph) {
+function loadStoredActiveParagraph(fallbackParagraph, paragraphs) {
   try {
     const saved =
       localStorage.getItem(ACTIVE_PARAGRAPH_STORAGE_KEY) ??
@@ -29,7 +18,15 @@ function loadStoredActiveParagraph(fallbackParagraph) {
     if (!saved) return fallbackParagraph;
 
     const parsed = JSON.parse(saved);
-    return isValidStoredParagraph(parsed) ? parsed : fallbackParagraph;
+    const paragraphId =
+      typeof parsed === 'string'
+        ? parsed
+        : typeof parsed?.id === 'string'
+          ? parsed.id
+          : null;
+
+    if (!paragraphId) return fallbackParagraph;
+    return paragraphs.find((paragraph) => paragraph.id === paragraphId) ?? fallbackParagraph;
   } catch {
     return fallbackParagraph;
   }
@@ -54,13 +51,13 @@ function StatePanel({ kicker, title, description }) {
 
 function TextPage() {
   const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
-  const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null));
+  const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
   const ui = useUI() || { isSidebarOpen: true };
   const { isSidebarOpen } = ui;
 
   React.useEffect(() => {
-    if (isValidStoredParagraph(activeParagraph)) {
-      localStorage.setItem(ACTIVE_PARAGRAPH_STORAGE_KEY, JSON.stringify(activeParagraph));
+    if (typeof activeParagraph?.id === 'string') {
+      localStorage.setItem(ACTIVE_PARAGRAPH_STORAGE_KEY, JSON.stringify(activeParagraph.id));
     }
   }, [activeParagraph]);
 
