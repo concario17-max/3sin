@@ -52,12 +52,12 @@ function StatePanel({ kicker, title, description }) {
 function TextPage() {
   const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
   const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
-  const ui = useUI() || { isSidebarOpen: true };
-  const { isSidebarOpen } = ui;
+  const ui = useUI() || { isSidebarOpen: true, isRightPanelOpen: false };
+  const { isSidebarOpen, isRightPanelOpen } = ui;
   const layoutVars = React.useMemo(() => ({
-    '--desktop-left-sidebar-width': '400px',
-    '--desktop-right-sidebar-width': '400px',
-  }), []);
+    '--desktop-left-sidebar-width': isSidebarOpen ? '400px' : '0px',
+    '--desktop-right-sidebar-width': isRightPanelOpen ? '400px' : '0px',
+  }), [isRightPanelOpen, isSidebarOpen]);
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {

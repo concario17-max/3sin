@@ -17,11 +17,11 @@ function Header() {
   return (
     <header className="fixed left-0 top-0 z-[60] h-16 w-full border-b border-sand-tertiary bg-white/80 backdrop-blur-md">
       <div className="flex h-full w-full items-center px-4 sm:px-8 xl:ml-[var(--desktop-left-sidebar-width)] xl:mr-[var(--desktop-right-sidebar-width)] xl:w-auto xl:px-8">
-        <div className="flex flex-1 justify-start lg:hidden">
+        <div className="flex flex-1 justify-start">
           <button
             onClick={ui.toggleSidebar}
             className="rounded-lg p-2 text-gold-primary transition-colors hover:bg-gold-surface"
-            aria-label="Open chapter menu"
+            aria-label={ui.isSidebarOpen ? 'Hide chapter menu' : 'Show chapter menu'}
           >
             <Menu className="h-6 w-6" />
           </button>

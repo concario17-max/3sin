@@ -82,7 +82,7 @@ const LeftSidebar = ({ chapters, onSelectParagraph, activeParagraphId, isPrayerP
                 />
             )}
 
-            <aside className={`fixed inset-y-0 left-0 top-16 z-50 w-80 lg:w-[400px] bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-r border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] lg:sticky lg:top-16 transform transition-transform duration-500 lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0 overflow-hidden shadow-2xl lg:shadow-none' : '-translate-x-full'} flex flex-col font-inter`}>
+            <aside className={`fixed inset-y-0 left-0 top-16 z-50 w-80 lg:w-[400px] bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-r border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] lg:sticky lg:top-16 transform transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0 overflow-hidden shadow-2xl lg:shadow-none' : '-translate-x-full'} flex flex-col font-inter`}>
                 <SidebarHeader setIsSidebarOpen={setIsSidebarOpen} />
 
                 <SidebarChapterList

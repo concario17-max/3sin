@@ -21,7 +21,10 @@ function loadStoredRightPanel() {
 }
 
 export const UIProvider = ({ children }) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+        if (typeof window === 'undefined') return true;
+        return window.innerWidth >= 1024;
+    });
     const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
     const [activeRightPanel, setActiveRightPanel] = useState(loadStoredRightPanel);
     const [isDarkMode, setIsDarkMode] = useState(loadStoredTheme);
