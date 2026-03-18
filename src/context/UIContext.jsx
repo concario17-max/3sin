@@ -1,50 +1,87 @@
 import React, { createContext, useContext, useState } from 'react';
 
 const UIContext = createContext();
+const THEME_STORAGE_KEY = 'three-body-theme';
+const RIGHT_PANEL_STORAGE_KEY = 'three-body-right-panel';
+
+function loadStoredTheme() {
+    if (typeof window === 'undefined') return false;
+
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (savedTheme === 'dark') return true;
+    if (savedTheme === 'light') return false;
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+function loadStoredRightPanel() {
+    if (typeof window === 'undefined') return 'reflections';
+    const savedPanel = window.localStorage.getItem(RIGHT_PANEL_STORAGE_KEY);
+    return savedPanel === 'commentary' ? 'commentary' : 'reflections';
+}
 
 export const UIProvider = ({ children }) => {
-    // 사이드바 상태를 제어하는 내부 State (불변성 유지)
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    // 리플렉션(우측 패널) 상태 제어
-    const [isReflectionsOpen, setIsReflectionsOpen] = useState(false);
-    // 컴펜디움(안내서) 모달 상태 제어
+    const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
+    const [activeRightPanel, setActiveRightPanel] = useState(loadStoredRightPanel);
+    const [isDarkMode, setIsDarkMode] = useState(loadStoredTheme);
     const [isCompendiumOpen, setIsCompendiumOpen] = useState(false);
-    // 코멘터리 모달 상태 제어
-    const [isCommentariesOpen, setIsCommentariesOpen] = useState(false);
-    // 렉시콘 모달 상태 제어
     const [isLexiconOpen, setIsLexiconOpen] = useState(false);
 
-    // 글로벌 구절(Sutra) 정보 공유 스테이트 (localStorage 기반 영속성 추가)
-    const [activeVerse, setActiveVerse] = useState(() => {
-        try {
-            const saved = localStorage.getItem('tibet_active_verse');
-            return saved ? JSON.parse(saved) : null;
-        } catch (e) {
-            return null;
-        }
-    });
+    const toggleSidebar = React.useCallback(() => setIsSidebarOpen((prev) => !prev), []);
+    const openRightPanel = React.useCallback((panel) => {
+        setActiveRightPanel(panel);
+        setIsRightPanelOpen(true);
+    }, []);
+    const closeRightPanel = React.useCallback(() => setIsRightPanelOpen(false), []);
+    const toggleRightPanel = React.useCallback(() => {
+        setActiveRightPanel((prev) => (prev === 'reflections' ? 'commentary' : 'reflections'));
+        setIsRightPanelOpen(true);
+    }, []);
+    const toggleTheme = React.useCallback(() => setIsDarkMode((prev) => !prev), []);
 
-    // activeVerse 변경 시 localStorage 동기화
-    React.useEffect(() => {
-        if (activeVerse === undefined) return;
-        localStorage.setItem('tibet_active_verse', JSON.stringify(activeVerse));
-    }, [activeVerse]);
-
-    // 각 패널을 토글하는 불변성 기반 함수들 (재생성 방지)
-    const toggleSidebar = React.useCallback(() => setIsSidebarOpen(prev => !prev), []);
-    const toggleReflections = React.useCallback(() => setIsReflectionsOpen(prev => !prev), []);
-
-    // 강제 종료 함수 (재생성 방지)
     const closeAllDrawers = React.useCallback(() => {
         setIsSidebarOpen(false);
-        setIsReflectionsOpen(false);
+        setIsRightPanelOpen(false);
     }, []);
 
-    // Provider Value 메모이제이션
+    React.useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDarkMode);
+        window.localStorage.setItem(THEME_STORAGE_KEY, isDarkMode ? 'dark' : 'light');
+    }, [isDarkMode]);
+
+    React.useEffect(() => {
+        window.localStorage.setItem(RIGHT_PANEL_STORAGE_KEY, activeRightPanel);
+    }, [activeRightPanel]);
+
+    const isReflectionsOpen = isRightPanelOpen && activeRightPanel === 'reflections';
+    const isCommentariesOpen = isRightPanelOpen && activeRightPanel === 'commentary';
+    const setIsReflectionsOpen = React.useCallback((value) => {
+        setActiveRightPanel('reflections');
+        setIsRightPanelOpen(value);
+    }, []);
+    const setIsCommentariesOpen = React.useCallback((value) => {
+        setActiveRightPanel('commentary');
+        setIsRightPanelOpen(value);
+    }, []);
+    const toggleReflections = React.useCallback(() => {
+        setActiveRightPanel('reflections');
+        setIsRightPanelOpen((prev) => (activeRightPanel === 'reflections' ? !prev : true));
+    }, [activeRightPanel]);
+
     const providerValue = React.useMemo(() => ({
         isSidebarOpen,
         setIsSidebarOpen,
         toggleSidebar,
+        isRightPanelOpen,
+        setIsRightPanelOpen,
+        openRightPanel,
+        closeRightPanel,
+        toggleRightPanel,
+        activeRightPanel,
+        setActiveRightPanel,
+        isDarkMode,
+        toggleTheme,
         isReflectionsOpen,
         setIsReflectionsOpen,
         isCompendiumOpen,
@@ -55,9 +92,25 @@ export const UIProvider = ({ children }) => {
         setIsLexiconOpen,
         toggleReflections,
         closeAllDrawers,
-        activeVerse,
-        setActiveVerse
-    }), [isSidebarOpen, isReflectionsOpen, isCompendiumOpen, isCommentariesOpen, isLexiconOpen, toggleSidebar, toggleReflections, closeAllDrawers, activeVerse]);
+    }), [
+        isSidebarOpen,
+        isRightPanelOpen,
+        activeRightPanel,
+        isDarkMode,
+        isReflectionsOpen,
+        isCompendiumOpen,
+        isCommentariesOpen,
+        isLexiconOpen,
+        toggleSidebar,
+        openRightPanel,
+        closeRightPanel,
+        toggleRightPanel,
+        toggleTheme,
+        toggleReflections,
+        closeAllDrawers,
+        setIsReflectionsOpen,
+        setIsCommentariesOpen,
+    ]);
 
     return (
         <UIContext.Provider value={providerValue}>

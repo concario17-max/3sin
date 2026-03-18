@@ -87,6 +87,7 @@ function TextPage() {
           />
           <RightSidebar
             activeVerseId={activeParagraph.id}
+            activeParagraph={activeParagraph}
             chapterSidebarOpen={isSidebarOpen}
           />
         </>
