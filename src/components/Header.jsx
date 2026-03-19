@@ -5,7 +5,7 @@ import { useUI } from '../context/UIContext';
 function Header() {
   const ui = useUI() || {
     toggleSidebar: () => {},
-    openRightPanel: () => {},
+    toggleCommentary: () => {},
     toggleTheme: () => {},
     isDarkMode: false,
     isSidebarOpen: true,
@@ -34,9 +34,9 @@ function Header() {
 
         <div className="flex flex-1 items-center justify-end gap-2">
           <button
-            onClick={ui.openRightPanel}
+            onClick={ui.toggleCommentary}
             className="inline-flex items-center gap-2 rounded-full border border-gold-primary/20 bg-white/70 px-3 py-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
-            aria-label="Open commentary panel"
+            aria-label="Toggle commentary panel"
           >
             <MessageSquareText className="h-4 w-4" />
             <span className="hidden text-xs font-semibold tracking-wide sm:inline">

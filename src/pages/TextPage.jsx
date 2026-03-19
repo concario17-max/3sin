@@ -54,10 +54,13 @@ function TextPage() {
   const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
   const ui = useUI() || { isSidebarOpen: true, isRightPanelOpen: false };
   const { isSidebarOpen, isRightPanelOpen } = ui;
+  const desktopRightSidebarWidth = isRightPanelOpen
+    ? (isSidebarOpen ? '400px' : '800px')
+    : '0px';
   const layoutVars = React.useMemo(() => ({
     '--desktop-left-sidebar-width': isSidebarOpen ? '400px' : '0px',
-    '--desktop-right-sidebar-width': isRightPanelOpen ? '400px' : '0px',
-  }), [isRightPanelOpen, isSidebarOpen]);
+    '--desktop-right-sidebar-width': desktopRightSidebarWidth,
+  }), [desktopRightSidebarWidth, isSidebarOpen]);
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {
@@ -96,6 +99,7 @@ function TextPage() {
             activeVerseId={activeParagraph.id}
             activeParagraph={activeParagraph}
             chapterSidebarOpen={isSidebarOpen}
+            expandToDoubleWidthWhenChapterSidebarClosed={true}
           />
         </>
       ) : (
