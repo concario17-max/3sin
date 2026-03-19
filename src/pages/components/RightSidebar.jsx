@@ -96,4 +96,10 @@ const RightSidebar = ({
     );
 };
 
-export default React.memo(RightSidebar, (prevProps, nextProps) => prevProps.activeParagraph?.id === nextProps.activeParagraph?.id);
+export default React.memo(
+    RightSidebar,
+    (prevProps, nextProps) =>
+        prevProps.activeParagraph?.id === nextProps.activeParagraph?.id &&
+        prevProps.chapterSidebarOpen === nextProps.chapterSidebarOpen &&
+        prevProps.expandToDoubleWidthWhenChapterSidebarClosed === nextProps.expandToDoubleWidthWhenChapterSidebarClosed,
+);
