@@ -33,15 +33,15 @@ const SidebarVerseList = ({ chapters, expandedChapter, activeParagraphId, paragr
                                 if (onSelectParagraph) onSelectParagraph(paragraph);
                                 if (window.innerWidth < 1024) setIsSidebarOpen(false);
                             }}
-                            className={`w-full flex items-start text-left gap-3 px-3 py-2.5 rounded-lg text-[16px] transition-all ${isActive
+                            className={`w-full flex items-start text-left gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${isActive
                                 ? 'bg-white/60 border border-gold-primary/30 text-text-primary font-medium shadow-sm dark:bg-dark-bg/60 dark:border-gold-primary/20 dark:text-gold-light'
                                 : 'border border-transparent text-text-secondary dark:text-dark-text-secondary hover:text-text-primary hover:bg-gold-surface/30 dark:hover:bg-dark-bg/40'
                                 }`}
                         >
-                            <span className={`min-w-[40px] whitespace-nowrap font-bold text-[14px] mt-[3px] ${isActive ? 'text-gold-primary' : 'text-text-secondary/60 dark:text-dark-text-secondary/60'}`}>
+                            <span className={`min-w-[40px] whitespace-nowrap font-bold text-xs mt-[3px] ${isActive ? 'text-gold-primary' : 'text-text-secondary/60 dark:text-dark-text-secondary/60'}`}>
                                 {paragraphIndices[paragraph.id] || paragraph.id}
                             </span>
-                            <span className="truncate opacity-90 text-[15px] leading-relaxed font-noto break-keep">
+                            <span className="truncate opacity-90 text-[13px] leading-relaxed font-noto break-keep">
                                 {paragraph.text?.tibetan || paragraph.chapterTitle || paragraph.title}
                             </span>
                         </button>

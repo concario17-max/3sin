@@ -62,23 +62,20 @@ const RightSidebar = ({
     };
     const { isRightPanelOpen, closeRightPanel } = uiContext;
     const desktopWidthClassName = expandToDoubleWidthWhenChapterSidebarClosed && !chapterSidebarOpen
-        ? 'lg:w-[800px]'
-        : 'lg:w-[400px]';
-    const visibilityClassName = isRightPanelOpen
-        ? 'translate-x-0 lg:translate-x-0'
-        : 'translate-x-full lg:translate-x-full pointer-events-none';
+        ? 'xl:w-[800px]'
+        : 'xl:w-[400px]';
 
     return (
         <>
             {isRightPanelOpen && (
                 <div
-                    className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+                    className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm xl:hidden transition-opacity duration-300"
                     onClick={closeRightPanel}
                 />
             )}
 
-            <aside className={`fixed inset-y-0 right-0 top-16 z-50 w-[90vw] sm:w-[400px] ${desktopWidthClassName} bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] lg:sticky lg:top-16 transform transition-transform duration-500 ${visibilityClassName} ${isRightPanelOpen ? 'overflow-hidden shadow-2xl lg:shadow-none' : ''} flex flex-col font-inter`}>
-                <div className="lg:hidden absolute top-4 right-4 z-50">
+            <aside className={`fixed inset-y-0 right-0 top-16 z-50 w-[90vw] sm:w-[400px] ${desktopWidthClassName} bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-transform duration-500 xl:translate-x-0 ${isRightPanelOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : 'translate-x-full'} flex flex-col font-inter`}>
+                <div className="xl:hidden absolute top-4 right-4 z-50">
                     <button onClick={closeRightPanel} className="p-2 rounded-full hover:bg-gold-surface dark:hover:bg-dark-surface text-text-secondary dark:text-dark-text-secondary transition-colors">
                         <X className="w-5 h-5" />
                     </button>

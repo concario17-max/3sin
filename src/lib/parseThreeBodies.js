@@ -51,25 +51,10 @@ function parseToc(source) {
   return chapters;
 }
 
-function normalizeReadingToc(chapters) {
-  if (chapters.length < 2) return chapters;
-
-  const [firstChapter, secondChapter, ...restChapters] = chapters;
-  if (!firstChapter.title.startsWith('귀의의 찬시')) return chapters;
-
-  return [
-    {
-      ...secondChapter,
-      start: firstChapter.start,
-    },
-    ...restChapters,
-  ];
-}
-
 export function buildReadingData() {
   const koreanEntries = parseKoreanEntries(koSource);
   const englishEntries = parseEnglishEntries(enSource);
-  const toc = normalizeReadingToc(parseToc(tocSource));
+  const toc = parseToc(tocSource);
 
   return toc.map((chapter, chapterIndex) => ({
     id: String(chapterIndex + 1),
