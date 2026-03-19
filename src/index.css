@@ -299,3 +299,15 @@ h6 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+@media (min-width: 1024px) {
+  .textpage-desktop-shell {
+    display: grid;
+    grid-template-columns: var(--desktop-left-sidebar-width) minmax(0, 1fr) var(--desktop-right-sidebar-width);
+  }
+
+  .textpage-header-inner {
+    padding-left: calc(var(--desktop-left-sidebar-width) + 1rem);
+    padding-right: calc(var(--desktop-right-sidebar-width) + 1rem);
+  }
+}
