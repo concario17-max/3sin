@@ -5,7 +5,7 @@ import ChapterButton from './ChapterButton';
 const ChapterGroup = ({ group, expandedChapter, toggleChapter, onSelectParagraph }) => {
     return (
         <motion.div layout className="mb-1">
-            <div className="px-3 py-2 text-gold-primary/80 dark:text-gold-light/70 text-[11px] font-bold tracking-[0.2em] rounded-lg bg-gold-surface/30 dark:bg-dark-bg/30 uppercase font-inter mb-1">
+            <div className="px-3 py-2 text-gold-primary/80 dark:text-gold-light/70 text-[13px] font-bold tracking-[0.2em] rounded-lg bg-gold-surface/30 dark:bg-dark-bg/30 uppercase font-inter mb-1">
                 {group.chapterName}
             </div>
 
