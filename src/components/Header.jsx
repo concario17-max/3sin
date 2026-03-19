@@ -14,7 +14,7 @@ function Header() {
 
   return (
     <header className="fixed left-0 top-0 z-[60] h-16 w-full border-b border-sand-tertiary bg-white/80 backdrop-blur-md">
-      <div className="flex h-full w-full items-center px-4 sm:px-8 lg:ml-[var(--desktop-left-sidebar-width)] lg:mr-[var(--desktop-right-sidebar-width)] lg:w-auto lg:px-8">
+      <div className="flex h-full w-full items-center px-4 sm:px-8 xl:ml-[400px] xl:mr-[400px] xl:w-auto xl:px-8">
         <div className="flex flex-1 items-center justify-start gap-3">
           <button
             onClick={ui.toggleSidebar}
