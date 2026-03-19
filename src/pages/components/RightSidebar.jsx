@@ -34,7 +34,7 @@ function CommentaryPanel({ activeParagraph }) {
                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-deep/70 dark:text-gold-light/65">
                     English Reference
                 </p>
-                <p className="mt-3 font-serif text-[15px] leading-7 text-text-primary dark:text-dark-text-primary">
+                <p className="mt-3 font-korean text-[14px] leading-7 tracking-[-0.01em] text-text-primary dark:text-dark-text-primary">
                     {englishText}
                 </p>
             </section>

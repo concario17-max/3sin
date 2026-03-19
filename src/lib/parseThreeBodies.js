@@ -6,6 +6,10 @@ function normalizeWhitespace(value) {
   return value.replace(/\r/g, '').replace(/[ \t]+/g, ' ').trim();
 }
 
+function compactChapterLabel(title) {
+  return title.replace(/^제\s*(\d+)장/, '$1장');
+}
+
 function parseKoreanEntries(source) {
   const pattern =
     /(\d+)\.\s*\[[^\]]+\]\s*([\s\S]*?)\s*\[[^\]]+\]\s*([\s\S]*?)(?=\n\d+\.\s*\[[^\]]+\]|\s*$)/g;
@@ -73,7 +77,7 @@ export function buildReadingData() {
 
   return toc.map((chapter, chapterIndex) => ({
     id: String(chapterIndex + 1),
-    chapterName: chapter.title,
+    chapterName: compactChapterLabel(chapter.title),
     title: chapter.title,
     paragraphs: koreanEntries
       .filter((entry) => entry.number >= chapter.start && entry.number <= chapter.end)

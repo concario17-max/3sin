@@ -22,7 +22,7 @@ const SidebarVerseList = ({ chapters, expandedChapter, activeParagraphId, paragr
 
     return (
         <div className="flex-1 overflow-y-auto bg-transparent custom-scrollbar h-full animate-[fadeIn_0.5s_ease-out]">
-            <div className="py-2 px-3 space-y-0.5">
+            <div className="py-1.5 px-3 space-y-0">
                 {foundChapter.paragraphs.map((paragraph) => {
                     const isActive = activeParagraphId === paragraph.id;
 
@@ -33,7 +33,7 @@ const SidebarVerseList = ({ chapters, expandedChapter, activeParagraphId, paragr
                                 if (onSelectParagraph) onSelectParagraph(paragraph);
                                 if (window.innerWidth < 1024) setIsSidebarOpen(false);
                             }}
-                            className={`w-full flex items-start text-left gap-3 px-3 py-2.5 rounded-lg text-[16px] transition-all ${isActive
+                            className={`w-full flex items-start text-left gap-2.5 px-3 py-1.5 rounded-lg text-[16px] transition-all ${isActive
                                 ? 'bg-white/60 border border-gold-primary/30 text-text-primary font-medium shadow-sm dark:bg-dark-bg/60 dark:border-gold-primary/20 dark:text-gold-light'
                                 : 'border border-transparent text-text-secondary dark:text-dark-text-secondary hover:text-text-primary hover:bg-gold-surface/30 dark:hover:bg-dark-bg/40'
                                 }`}
