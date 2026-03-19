@@ -50,7 +50,7 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="relative z-10 flex-1 min-w-0 overflow-y-auto bg-transparent pb-28 pt-16 font-crimson text-text-primary transition-colors duration-500 scrollbar-hide dark:text-dark-text-primary sm:pb-20 sm:pt-24"
+            className="relative z-10 flex-1 min-w-0 overflow-y-auto bg-transparent pb-28 pt-8 font-crimson text-text-primary transition-colors duration-500 scrollbar-hide dark:text-dark-text-primary sm:pb-20 sm:pt-12"
         >
             <div className="mx-auto max-w-[980px] px-4 sm:px-8">
                 <motion.div variants={itemVariants}>
