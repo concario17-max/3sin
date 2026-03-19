@@ -15,7 +15,7 @@ function Header() {
 
   return (
     <header className="fixed left-0 top-0 z-[60] h-16 w-full border-b border-sand-tertiary bg-white/80 backdrop-blur-md">
-      <div className="flex h-full w-full items-center px-4 sm:px-8 xl:ml-[var(--desktop-left-sidebar-width)] xl:mr-[var(--desktop-right-sidebar-width)] xl:w-auto xl:px-8">
+      <div className="flex h-full w-full items-center px-4 sm:px-8 xl:ml-[400px] xl:mr-[400px] xl:w-auto xl:px-8">
         <div className="flex flex-1 justify-start">
           <button
             onClick={ui.toggleSidebar}
@@ -54,13 +54,10 @@ function Header() {
 
           <button
             onClick={ui.toggleTheme}
-            className="inline-flex items-center gap-2 rounded-full border border-gold-primary/20 bg-white/70 px-3 py-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
+            className="inline-flex items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 p-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
             aria-label={ui.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             <ThemeIcon className="h-4 w-4" />
-            <span className="hidden text-xs font-semibold tracking-wide sm:inline">
-              {ui.isDarkMode ? 'Light' : 'Dark'}
-            </span>
           </button>
         </div>
       </div>
