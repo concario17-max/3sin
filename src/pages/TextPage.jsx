@@ -1,7 +1,6 @@
 import React from 'react';
-import Header from '../components/Header';
-import { useUI } from '../context/UIContext';
 import { buildReadingData, flattenParagraphs } from '../lib/parseThreeBodies';
+import { useUI } from '../context/UIContext';
 import LeftSidebar from './components/LeftSidebar';
 import ReadingPanel from './components/ReadingPanel';
 import RightSidebar from './components/RightSidebar';
@@ -35,7 +34,7 @@ function loadStoredActiveParagraph(fallbackParagraph, paragraphs) {
 
 function StatePanel({ kicker, title, description }) {
   return (
-    <div className="flex h-full w-full items-center justify-center p-6 sm:p-8">
+    <div className="flex h-full w-full flex-1 items-center justify-center p-6 sm:p-8">
       <div className="empty-state-card max-w-lg rounded-[2rem] px-8 py-10 text-center shadow-[0_30px_70px_rgba(120,93,48,0.08)]">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-gold-border/25 bg-gold-surface/35 text-gold-deep shadow-inner">
           <span className="font-serif text-2xl">3</span>
@@ -52,21 +51,16 @@ function StatePanel({ kicker, title, description }) {
 
 function TextPage() {
   const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
-  const [activeParagraph, setActiveParagraph] = React.useState(() =>
-    loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs),
-  );
+  const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
   const ui = useUI() || { isSidebarOpen: true, isRightPanelOpen: false };
   const { isSidebarOpen, isRightPanelOpen } = ui;
   const desktopRightSidebarWidth = isRightPanelOpen
     ? (isSidebarOpen ? '400px' : '800px')
     : '0px';
-  const layoutVars = React.useMemo(
-    () => ({
-      '--desktop-left-sidebar-width': isSidebarOpen ? '400px' : '0px',
-      '--desktop-right-sidebar-width': desktopRightSidebarWidth,
-    }),
-    [desktopRightSidebarWidth, isSidebarOpen],
-  );
+  const layoutVars = React.useMemo(() => ({
+    '--desktop-left-sidebar-width': isSidebarOpen ? '400px' : '0px',
+    '--desktop-right-sidebar-width': desktopRightSidebarWidth,
+  }), [desktopRightSidebarWidth, isSidebarOpen]);
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {
@@ -74,9 +68,7 @@ function TextPage() {
     }
   }, [activeParagraph]);
 
-  const currentIndex = activeParagraph
-    ? flatParagraphs.findIndex((paragraph) => paragraph.id === activeParagraph.id)
-    : -1;
+  const currentIndex = activeParagraph ? flatParagraphs.findIndex((paragraph) => paragraph.id === activeParagraph.id) : -1;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex !== -1 && currentIndex < flatParagraphs.length - 1;
 
@@ -86,18 +78,16 @@ function TextPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-sand-primary xl:bg-transparent" style={layoutVars}>
+    <div
+      className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent"
+      style={layoutVars}
+    >
       <div className="fixed inset-0 z-[-1] pointer-events-none bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
-      <Header />
 
-      <div className="textpage-desktop-shell relative z-10 h-[calc(100vh-64px)] overflow-hidden pt-16">
-        <LeftSidebar
-          chapters={chapters}
-          onSelectParagraph={setActiveParagraph}
-          activeParagraphId={activeParagraph?.id}
-        />
+      <LeftSidebar chapters={chapters} onSelectParagraph={setActiveParagraph} activeParagraphId={activeParagraph?.id} />
 
-        {activeParagraph ? (
+      {activeParagraph ? (
+        <>
           <ReadingPanel
             verse={activeParagraph}
             globalIndex={currentIndex + 1}
@@ -105,20 +95,20 @@ function TextPage() {
             onPrevious={hasPrev ? () => handleNavigate('prev') : null}
             onNext={hasNext ? () => handleNavigate('next') : null}
           />
-        ) : (
-          <StatePanel
-            kicker="Select A Passage"
-            title="Select a paragraph to begin"
-            description="Choose a chapter and paragraph from the left sidebar to open the full reading layout."
+          <RightSidebar
+            activeVerseId={activeParagraph.id}
+            activeParagraph={activeParagraph}
+            chapterSidebarOpen={isSidebarOpen}
+            expandToDoubleWidthWhenChapterSidebarClosed={true}
           />
-        )}
-
-        <RightSidebar
-          activeParagraph={activeParagraph}
-          chapterSidebarOpen={isSidebarOpen}
-          expandToDoubleWidthWhenChapterSidebarClosed={true}
+        </>
+      ) : (
+        <StatePanel
+          kicker="Select A Passage"
+          title="Select a paragraph to begin"
+          description="Choose a chapter and paragraph from the left sidebar to open the full reading layout."
         />
-      </div>
+      )}
     </div>
   );
 }

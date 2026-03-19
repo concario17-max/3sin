@@ -14,7 +14,7 @@ function Header() {
 
   return (
     <header className="fixed left-0 top-0 z-[60] h-16 w-full border-b border-sand-tertiary bg-white/80 backdrop-blur-md">
-      <div className="textpage-header-inner flex h-full w-full items-center px-4 sm:px-8">
+      <div className="flex h-full w-full items-center px-4 sm:px-8 xl:ml-[400px] xl:mr-[400px] xl:w-auto xl:px-8">
         <div className="flex flex-1 items-center justify-start gap-3">
           <button
             onClick={ui.toggleSidebar}
@@ -28,7 +28,7 @@ function Header() {
             <BookOpenText className="h-5 w-5" />
           </span>
           <span className="font-serif text-[13px] font-bold tracking-[0.03em] text-charcoal-main sm:text-[16px]">
-            諛援먯쓽 ?깅텋 ?먮━
+            밀교의 성불 원리
           </span>
         </div>
 
