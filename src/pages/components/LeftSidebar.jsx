@@ -7,6 +7,9 @@ import SidebarVerseList from '../../components/Sidebar/SidebarVerseList';
 const LeftSidebar = ({ chapters, onSelectParagraph, activeParagraphId, isPrayerPage = false }) => {
     const uiContext = useUI() || { isSidebarOpen: true, setIsSidebarOpen: () => { } };
     const { isSidebarOpen, setIsSidebarOpen } = uiContext;
+    const desktopSidebarClasses = isSidebarOpen
+        ? 'xl:w-[400px] xl:translate-x-0 xl:opacity-100 xl:pointer-events-auto'
+        : 'xl:w-0 xl:-translate-x-full xl:opacity-0 xl:pointer-events-none xl:overflow-hidden xl:border-r-0';
 
     const paragraphIndices = React.useMemo(() => {
         const map = {};
@@ -82,7 +85,7 @@ const LeftSidebar = ({ chapters, onSelectParagraph, activeParagraphId, isPrayerP
                 />
             )}
 
-            <aside className={`fixed inset-y-0 left-0 top-16 z-50 w-80 lg:w-[400px] bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-r border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] lg:sticky lg:top-16 transform transition-transform duration-500 ${isSidebarOpen ? 'translate-x-0 overflow-hidden shadow-2xl lg:shadow-none' : '-translate-x-full'} flex flex-col font-inter`}>
+            <aside className={`fixed inset-y-0 left-0 top-16 z-50 w-80 bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-r border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-all duration-500 ${isSidebarOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : '-translate-x-full'} ${desktopSidebarClasses} flex flex-col font-inter xl:shrink-0`}>
                 <SidebarHeader setIsSidebarOpen={setIsSidebarOpen} />
 
                 <SidebarChapterList

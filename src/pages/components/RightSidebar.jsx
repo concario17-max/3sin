@@ -74,7 +74,7 @@ const RightSidebar = ({
                 />
             )}
 
-            <aside className={`fixed inset-y-0 right-0 top-16 z-50 w-[90vw] sm:w-[400px] ${desktopWidthClassName} bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-transform duration-500 xl:translate-x-0 ${isRightPanelOpen ? 'translate-x-0 overflow-hidden shadow-2xl xl:shadow-none' : 'translate-x-full'} flex flex-col font-inter`}>
+            <aside className={`fixed inset-y-0 right-0 top-16 z-50 w-[90vw] sm:w-[400px] bg-white/80 dark:bg-dark-bg/95 backdrop-blur-xl border-l border-gold-primary/20 dark:border-dark-border/50 h-[calc(100vh-64px)] xl:sticky xl:top-16 transform transition-all duration-500 ${isRightPanelOpen ? `translate-x-0 overflow-hidden shadow-2xl xl:translate-x-0 xl:shadow-none ${desktopWidthClassName}` : 'translate-x-full xl:w-0 xl:translate-x-10 xl:border-none xl:opacity-0'} flex flex-col font-inter`}>
                 <div className="xl:hidden absolute top-4 right-4 z-50">
                     <button onClick={closeRightPanel} className="p-2 rounded-full hover:bg-gold-surface dark:hover:bg-dark-surface text-text-secondary dark:text-dark-text-secondary transition-colors">
                         <X className="w-5 h-5" />

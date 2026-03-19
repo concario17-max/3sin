@@ -52,12 +52,8 @@ function StatePanel({ kicker, title, description }) {
 function TextPage() {
   const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
   const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
-  const ui = useUI() || { isSidebarOpen: true, isRightPanelOpen: false };
-  const { isSidebarOpen, isRightPanelOpen } = ui;
-  const layoutVars = React.useMemo(() => ({
-    '--desktop-left-sidebar-width': isSidebarOpen ? '400px' : '0px',
-    '--desktop-right-sidebar-width': isRightPanelOpen ? '400px' : '0px',
-  }), [isRightPanelOpen, isSidebarOpen]);
+  const ui = useUI() || { isSidebarOpen: true };
+  const { isSidebarOpen } = ui;
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {
@@ -77,7 +73,6 @@ function TextPage() {
   return (
     <div
       className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent"
-      style={layoutVars}
     >
       <div className="fixed inset-0 z-[-1] pointer-events-none bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
 
@@ -96,6 +91,7 @@ function TextPage() {
             activeVerseId={activeParagraph.id}
             activeParagraph={activeParagraph}
             chapterSidebarOpen={isSidebarOpen}
+            expandToDoubleWidthWhenChapterSidebarClosed={true}
           />
         </>
       ) : (

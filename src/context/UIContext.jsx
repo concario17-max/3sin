@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 const UIContext = createContext();
 const THEME_STORAGE_KEY = 'three-body-theme';
+const isDesktopLayout = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1280px)').matches;
 
 function loadStoredTheme() {
     if (typeof window === 'undefined') return false;
@@ -14,11 +15,8 @@ function loadStoredTheme() {
 }
 
 export const UIProvider = ({ children }) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
-        if (typeof window === 'undefined') return true;
-        return window.innerWidth >= 1024;
-    });
-    const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(isDesktopLayout);
+    const [isRightPanelOpen, setIsRightPanelOpen] = useState(isDesktopLayout);
     const [isDarkMode, setIsDarkMode] = useState(loadStoredTheme);
     const [isCompendiumOpen, setIsCompendiumOpen] = useState(false);
     const [isLexiconOpen, setIsLexiconOpen] = useState(false);
