@@ -299,3 +299,25 @@ h6 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+@media (min-width: 1280px) {
+  .desktop-frame-grid {
+    display: grid;
+    grid-template-columns: var(--desktop-frame-columns);
+  }
+
+  .desktop-frame-main {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  .desktop-header-grid {
+    display: grid;
+    grid-template-columns: var(--desktop-frame-columns);
+  }
+
+  .desktop-header-main {
+    grid-column: 2;
+    min-width: 0;
+  }
+}

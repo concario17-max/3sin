@@ -1,6 +1,9 @@
 import React from 'react';
 import { buildReadingData, flattenParagraphs } from '../lib/parseThreeBodies';
 import { useUI } from '../context/UIContext';
+import Header from '../components/Header';
+import AppShell from '../components/ui/AppShell';
+import { getDesktopFrameColumns } from '../components/ui/desktopFrame';
 import LeftSidebar from './components/LeftSidebar';
 import ReadingPanel from './components/ReadingPanel';
 import RightSidebar from './components/RightSidebar';
@@ -42,8 +45,12 @@ function StatePanel({ kicker, title, description }) {
         <p className="mt-5 font-inter text-[10px] font-semibold uppercase tracking-[0.4em] text-gold-deep/72">
           {kicker}
         </p>
-        <h3 className="mt-4 font-serif text-[1.8rem] leading-tight text-text-primary">{title}</h3>
-        <p className="mt-4 font-korean text-[15px] leading-[1.9] text-text-secondary/85">{description}</p>
+        <h3 className="mt-4 font-serif text-[1.8rem] leading-tight text-text-primary dark:text-dark-text-primary">
+          {title}
+        </h3>
+        <p className="mt-4 font-korean text-[15px] leading-[1.9] text-text-secondary/85 dark:text-dark-text-secondary">
+          {description}
+        </p>
       </div>
     </div>
   );
@@ -51,9 +58,15 @@ function StatePanel({ kicker, title, description }) {
 
 function TextPage() {
   const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
-  const [activeParagraph, setActiveParagraph] = React.useState(() => loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs));
-  const ui = useUI() || { isSidebarOpen: true };
-  const { isSidebarOpen } = ui;
+  const [activeParagraph, setActiveParagraph] = React.useState(() =>
+    loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs),
+  );
+  const ui = useUI() || {
+    isSidebarOpen: false,
+    activeRightPanel: null,
+    isDesktopSidebarOpen: true,
+    activeDesktopRightPanel: 'commentary',
+  };
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {
@@ -61,9 +74,20 @@ function TextPage() {
     }
   }, [activeParagraph]);
 
-  const currentIndex = activeParagraph ? flatParagraphs.findIndex((paragraph) => paragraph.id === activeParagraph.id) : -1;
+  const currentIndex = activeParagraph
+    ? flatParagraphs.findIndex((paragraph) => paragraph.id === activeParagraph.id)
+    : -1;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex !== -1 && currentIndex < flatParagraphs.length - 1;
+
+  const desktopGridColumns = React.useMemo(
+    () =>
+      getDesktopFrameColumns(
+        ui.isDesktopSidebarOpen,
+        ui.activeDesktopRightPanel === 'commentary',
+      ),
+    [ui.activeDesktopRightPanel, ui.isDesktopSidebarOpen],
+  );
 
   const handleNavigate = (direction) => {
     if (direction === 'prev' && hasPrev) setActiveParagraph(flatParagraphs[currentIndex - 1]);
@@ -71,15 +95,23 @@ function TextPage() {
   };
 
   return (
-    <div
-      className="relative z-10 flex h-screen min-h-screen w-full overflow-hidden bg-sand-primary pt-16 xl:bg-transparent"
+    <AppShell
+      header={<Header />}
+      sidebar={
+        <LeftSidebar
+          chapters={chapters}
+          onSelectParagraph={setActiveParagraph}
+          activeParagraphId={activeParagraph?.id}
+        />
+      }
+      rightPanel={<RightSidebar activeParagraph={activeParagraph} />}
+      desktopGridColumns={desktopGridColumns}
+      isMobilePanelOpen={ui.isSidebarOpen || ui.activeRightPanel !== null}
     >
-      <div className="fixed inset-0 z-[-1] pointer-events-none bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
+      <div className="relative min-h-full bg-sand-primary pt-16 xl:bg-transparent">
+        <div className="pointer-events-none absolute inset-0 z-[-1] bg-grid-slate-900/[0.04] bg-[bottom_1px_center]" />
 
-      <LeftSidebar chapters={chapters} onSelectParagraph={setActiveParagraph} activeParagraphId={activeParagraph?.id} />
-
-      {activeParagraph ? (
-        <>
+        {activeParagraph ? (
           <ReadingPanel
             verse={activeParagraph}
             globalIndex={currentIndex + 1}
@@ -87,21 +119,15 @@ function TextPage() {
             onPrevious={hasPrev ? () => handleNavigate('prev') : null}
             onNext={hasNext ? () => handleNavigate('next') : null}
           />
-          <RightSidebar
-            activeVerseId={activeParagraph.id}
-            activeParagraph={activeParagraph}
-            chapterSidebarOpen={isSidebarOpen}
-            expandToDoubleWidthWhenChapterSidebarClosed={true}
+        ) : (
+          <StatePanel
+            kicker="Select A Passage"
+            title="Select a paragraph to begin"
+            description="Choose a chapter and paragraph from the left sidebar to open the full reading layout."
           />
-        </>
-      ) : (
-        <StatePanel
-          kicker="Select A Passage"
-          title="Select a paragraph to begin"
-          description="Choose a chapter and paragraph from the left sidebar to open the full reading layout."
-        />
-      )}
-    </div>
+        )}
+      </div>
+    </AppShell>
   );
 }
 
