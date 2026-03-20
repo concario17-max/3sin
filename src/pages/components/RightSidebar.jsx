@@ -3,13 +3,43 @@ import { MessageSquareText } from 'lucide-react';
 import { useUI } from '../../context/UIContext';
 import SidebarLayout from '../../components/ui/SidebarLayout';
 
+/** @typedef {import('../../types').ReadingParagraph} ReadingParagraph */
+/** @typedef {import('../../types').UIContextValue} UIContextValue */
+
+/**
+ * @returns {UIContextValue}
+ */
+function createFallbackUIContext() {
+  return {
+    isDesktopViewport: false,
+    isSidebarOpen: false,
+    setIsSidebarOpen: () => {},
+    isDesktopSidebarOpen: true,
+    setIsDesktopSidebarOpen: () => {},
+    toggleSidebar: () => {},
+    activeRightPanel: null,
+    setActiveRightPanel: () => {},
+    activeDesktopRightPanel: 'commentary',
+    setActiveDesktopRightPanel: () => {},
+    isRightPanelOpen: true,
+    closeRightPanel: () => {},
+    toggleRightPanel: () => {},
+    isDarkMode: false,
+    toggleTheme: () => {},
+    closeAllDrawers: () => {},
+  };
+}
+
+/**
+ * @param {{ activeParagraph: ReadingParagraph | null }} props
+ */
 function CommentaryPanel({ activeParagraph }) {
   const englishText =
-    activeParagraph?.text?.english || 'No English rendering is available for this paragraph.';
+    activeParagraph?.text.english || 'No English rendering is available for this paragraph.';
   const koreanText =
-    activeParagraph?.text?.korean || 'No Korean rendering is available for this paragraph.';
+    activeParagraph?.text.korean || 'No Korean rendering is available for this paragraph.';
   const tibetanText =
-    activeParagraph?.text?.tibetan || 'No Tibetan source line is available for this paragraph.';
+    activeParagraph?.text.tibetan || 'No Tibetan source line is available for this paragraph.';
 
   return (
     <div className="custom-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-1">
@@ -21,7 +51,9 @@ function CommentaryPanel({ activeParagraph }) {
           {activeParagraph?.chapterTitle || 'Commentary'}
         </h3>
         <p className="mt-3 font-korean text-[14px] leading-7 text-text-secondary dark:text-dark-text-secondary">
-          Paragraph {activeParagraph?.id || '-'}를 읽을 때 티베트 원문, 영어 역문, 한국어 번역을 나란히 두고 의미의 결을 비교해 보세요. 이 패널은 본문을 읽어서 얻는 해설 창으로 동작합니다.
+          Paragraph {activeParagraph?.id || '-'}를 읽을 때 티베트 원문, 영어 역문, 한국어 번역을
+          나란히 두고 의미의 결을 비교해 보세요. 이 패널은 본문을 읽으면서 참고하는 보조 해설
+          창입니다.
         </p>
       </section>
 
@@ -55,12 +87,11 @@ function CommentaryPanel({ activeParagraph }) {
   );
 }
 
+/**
+ * @param {{ activeParagraph: ReadingParagraph | null }} props
+ */
 function RightSidebar({ activeParagraph }) {
-  const uiContext = useUI() || {
-    activeRightPanel: null,
-    activeDesktopRightPanel: 'commentary',
-    closeRightPanel: () => {},
-  };
+  const uiContext = useUI() ?? createFallbackUIContext();
   const { activeRightPanel, activeDesktopRightPanel, closeRightPanel } = uiContext;
   const isMobileOpen = activeRightPanel === 'commentary';
   const isDesktopOpen = activeDesktopRightPanel === 'commentary';

@@ -1,5 +1,13 @@
 import React from 'react';
 
+/**
+ * @param {{
+ *   chapterStr: string,
+ *   verseStr: string,
+ *   globalIndex: number,
+ *   verseId: string
+ * }} props
+ */
 function ReadingHeader({ chapterStr, verseStr, globalIndex, verseId }) {
   const sectionLabel = verseStr ? `Chapter ${chapterStr}` : 'Text';
   const entryLabel = verseStr

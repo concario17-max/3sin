@@ -1,6 +1,11 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
+/** @typedef {import('../../types').SidebarLayoutProps} SidebarLayoutProps */
+
+/**
+ * @param {SidebarLayoutProps} props
+ */
 function SidebarLayout({
   isOpen,
   isDesktopOpen,

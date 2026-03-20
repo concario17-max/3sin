@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useAudioPlayer } from '../../hooks/useAudioPlayer';
-import { formatTime } from '../../utils/audioUtils';
 import ReadingHeader from '../../components/Reading/ReadingHeader';
 import TibetanSection from '../../components/Reading/TibetanSection';
-import AudioPill from '../../components/Reading/AudioPill';
 import TranslationSection from '../../components/Reading/TranslationSection';
 import NavigationPill from '../../components/Reading/NavigationPill';
+
+/** @typedef {import('../../types').ReadingParagraph} ReadingParagraph */
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,19 +30,19 @@ const itemVariants = {
   },
 };
 
-const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNext }) => {
+/**
+ * @param {{
+ *   verse: ReadingParagraph | null,
+ *   globalIndex: number,
+ *   hideAudio?: boolean,
+ *   onPrevious: (() => void) | null,
+ *   onNext: (() => void) | null
+ * }} props
+ */
+function ReadingPanel({ verse, globalIndex, onPrevious, onNext }) {
   const safeVerse = verse && typeof verse === 'object' ? verse : null;
   const verseId = typeof safeVerse?.id === 'string' ? safeVerse.id : '';
-  const verseTitle = typeof safeVerse?.title === 'string' ? safeVerse.title : '';
-  const verseChapterTitle = typeof safeVerse?.chapterTitle === 'string' ? safeVerse.chapterTitle : '';
-  const verseAudioUrl = typeof safeVerse?.audioUrl === 'string' ? safeVerse.audioUrl : '';
-  const verseText = safeVerse?.text && typeof safeVerse.text === 'object' ? safeVerse.text : {};
-  const audioPlaylist = React.useMemo(
-    () => (verseAudioUrl ? [{ id: verseId, title: verseTitle, url: verseAudioUrl }] : []),
-    [verseAudioUrl, verseId, verseTitle],
-  );
-
-  const { isPlaying, progress, currentTime, duration, togglePlay, seek } = useAudioPlayer(audioPlaylist);
+  const verseText = safeVerse?.text && typeof safeVerse.text === 'object' ? safeVerse.text : null;
   const [chapterStr = '', verseStr = ''] = verseId.split('.');
 
   return (
@@ -60,32 +59,21 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
             verseStr={verseStr}
             globalIndex={globalIndex}
             verseId={verseId}
-            title={verseTitle}
-            chapterTitle={verseChapterTitle}
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <TibetanSection tibetan={verseText.tibetan} pronunciation={verseText.pronunciation} />
+          <TibetanSection
+            tibetan={verseText?.tibetan ?? ''}
+            pronunciation={verseText?.pronunciation ?? ''}
+          />
         </motion.div>
 
-        {!hideAudio && (
-          <motion.div variants={itemVariants}>
-            <AudioPill
-              isPlaying={isPlaying}
-              progress={progress}
-              currentTime={currentTime}
-              duration={duration}
-              togglePlay={togglePlay}
-              seek={seek}
-              audioUrl={verseAudioUrl}
-              formatTime={formatTime}
-            />
-          </motion.div>
-        )}
-
         <motion.div variants={itemVariants}>
-          <TranslationSection english={verseText.english} korean={verseText.korean} />
+          <TranslationSection
+            english={verseText?.english ?? ''}
+            korean={verseText?.korean ?? ''}
+          />
         </motion.div>
 
         <motion.div variants={itemVariants}>
@@ -99,6 +87,6 @@ const ReadingPanel = ({ verse, globalIndex, hideAudio = false, onPrevious, onNex
       </div>
     </motion.section>
   );
-};
+}
 
 export default React.memo(ReadingPanel, (prevProps, nextProps) => prevProps.verse?.id === nextProps.verse?.id);

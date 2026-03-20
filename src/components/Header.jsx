@@ -3,20 +3,40 @@ import { BookOpenText, Menu, MessageSquareText, MoonStar, SunMedium } from 'luci
 import { useUI } from '../context/UIContext';
 import { DESKTOP_FRAME_COLUMNS_DEFAULT } from './ui/desktopFrame';
 
+/** @typedef {import('../types').UIContextValue} UIContextValue */
+
 const TITLE_TEXT = '밀교의 성불 원리';
 
-function Header() {
-  const ui = useUI() || {
+/**
+ * @returns {UIContextValue}
+ */
+function createFallbackUIContext() {
+  return {
+    isDesktopViewport: false,
+    isSidebarOpen: false,
+    setIsSidebarOpen: () => {},
+    isDesktopSidebarOpen: true,
+    setIsDesktopSidebarOpen: () => {},
     toggleSidebar: () => {},
-    toggleRightPanel: () => {},
-    toggleTheme: () => {},
-    isDarkMode: false,
     activeRightPanel: null,
+    setActiveRightPanel: () => {},
     activeDesktopRightPanel: 'commentary',
+    setActiveDesktopRightPanel: () => {},
+    isRightPanelOpen: true,
+    closeRightPanel: () => {},
+    toggleRightPanel: () => {},
+    isDarkMode: false,
+    toggleTheme: () => {},
+    closeAllDrawers: () => {},
   };
+}
+
+function Header() {
+  const ui = useUI() ?? createFallbackUIContext();
   const ThemeIcon = ui.isDarkMode ? SunMedium : MoonStar;
   const isCommentaryOpen =
     ui.activeRightPanel === 'commentary' || ui.activeDesktopRightPanel === 'commentary';
+  /** @type {React.CSSProperties & {'--desktop-frame-columns': string}} */
   const desktopHeaderStyle = {
     '--desktop-frame-columns': DESKTOP_FRAME_COLUMNS_DEFAULT,
   };
@@ -28,6 +48,7 @@ function Header() {
       <div className="flex h-full items-center justify-between px-4 sm:px-8 xl:hidden">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <button
+            type="button"
             onClick={ui.toggleSidebar}
             className="rounded-lg p-2 text-gold-primary transition-colors hover:bg-gold-surface"
             aria-label="Toggle chapter menu"
@@ -45,6 +66,7 @@ function Header() {
 
         <div className="ml-2 flex shrink-0 items-center justify-end gap-2 sm:ml-3">
           <button
+            type="button"
             onClick={() => ui.toggleRightPanel('commentary')}
             className="inline-flex items-center gap-2 rounded-full border border-gold-primary/20 bg-white/70 px-3 py-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
             aria-label={commentaryLabel}
@@ -54,6 +76,7 @@ function Header() {
           </button>
 
           <button
+            type="button"
             onClick={ui.toggleTheme}
             className="inline-flex items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 p-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
             aria-label={ui.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -67,6 +90,7 @@ function Header() {
         <div className="desktop-header-main flex h-full min-w-0 items-center justify-between gap-6 px-6">
           <div className="flex min-w-0 items-center gap-3">
             <button
+              type="button"
               onClick={ui.toggleSidebar}
               className="rounded-lg p-2 text-gold-primary transition-colors hover:bg-gold-surface"
               aria-label="Toggle chapter menu"
@@ -84,6 +108,7 @@ function Header() {
 
           <div className="flex shrink-0 items-center gap-2">
             <button
+              type="button"
               onClick={() => ui.toggleRightPanel('commentary')}
               className="inline-flex items-center gap-2 rounded-full border border-gold-primary/20 bg-white/70 px-3 py-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
               aria-label={commentaryLabel}
@@ -93,6 +118,7 @@ function Header() {
             </button>
 
             <button
+              type="button"
               onClick={ui.toggleTheme}
               className="inline-flex items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 p-2 text-gold-primary transition-colors hover:bg-gold-surface dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light"
               aria-label={ui.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}

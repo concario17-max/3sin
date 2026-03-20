@@ -1,14 +1,23 @@
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
 
-const UIContext = createContext();
+/** @typedef {import('../types').RightPanelType} RightPanelType */
+/** @typedef {import('../types').UIContextValue} UIContextValue */
+
+const UIContext = React.createContext(/** @type {UIContextValue | undefined} */ (undefined));
 const THEME_STORAGE_KEY = 'three-body-theme';
 const DESKTOP_QUERY = '(min-width: 1280px)';
 const DESKTOP_SIDEBAR_STORAGE_KEY = 'three-body-desktop-sidebar';
 const DESKTOP_RIGHT_PANEL_STORAGE_KEY = 'three-body-desktop-right-panel';
 
+/**
+ * @returns {boolean}
+ */
 const isDesktopLayout = () =>
   typeof window !== 'undefined' && window.matchMedia(DESKTOP_QUERY).matches;
 
+/**
+ * @returns {boolean}
+ */
 function loadStoredTheme() {
   if (typeof window === 'undefined') return false;
 
@@ -19,6 +28,9 @@ function loadStoredTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
+/**
+ * @returns {boolean}
+ */
 function loadStoredDesktopSidebar() {
   if (typeof window === 'undefined') return true;
 
@@ -26,6 +38,9 @@ function loadStoredDesktopSidebar() {
   return savedState === null ? true : JSON.parse(savedState);
 }
 
+/**
+ * @returns {RightPanelType}
+ */
 function loadStoredDesktopRightPanel() {
   if (typeof window === 'undefined') return 'commentary';
 
@@ -33,20 +48,24 @@ function loadStoredDesktopRightPanel() {
   return savedState === null ? 'commentary' : JSON.parse(savedState);
 }
 
-export const UIProvider = ({ children }) => {
-  const [isDesktopViewport, setIsDesktopViewport] = useState(isDesktopLayout);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeRightPanel, setActiveRightPanel] = useState(null);
-  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(loadStoredDesktopSidebar);
-  const [activeDesktopRightPanel, setActiveDesktopRightPanel] = useState(loadStoredDesktopRightPanel);
-  const [isDarkMode, setIsDarkMode] = useState(loadStoredTheme);
-  const [isCompendiumOpen, setIsCompendiumOpen] = useState(false);
-  const [isLexiconOpen, setIsLexiconOpen] = useState(false);
+/**
+ * @param {{ children: React.ReactNode }} props
+ */
+export function UIProvider({ children }) {
+  const [isDesktopViewport, setIsDesktopViewport] = React.useState(isDesktopLayout);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [activeRightPanel, setActiveRightPanel] = React.useState(/** @type {RightPanelType} */ (null));
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = React.useState(loadStoredDesktopSidebar);
+  const [activeDesktopRightPanel, setActiveDesktopRightPanel] = React.useState(loadStoredDesktopRightPanel);
+  const [isDarkMode, setIsDarkMode] = React.useState(loadStoredTheme);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
     const mediaQueryList = window.matchMedia(DESKTOP_QUERY);
+    /**
+     * @param {MediaQueryList | MediaQueryListEvent} event
+     */
     const handleChange = (event) => {
       setIsDesktopViewport(event.matches);
 
@@ -75,6 +94,9 @@ export const UIProvider = ({ children }) => {
   }, [isDesktopViewport]);
 
   const toggleRightPanel = React.useCallback(
+    /**
+     * @param {'commentary'} [panel]
+     */
     (panel = 'commentary') => {
       if (isDesktopViewport) {
         setActiveDesktopRightPanel((prev) => {
@@ -90,16 +112,6 @@ export const UIProvider = ({ children }) => {
     [isDesktopViewport],
   );
 
-  const openRightPanel = React.useCallback(() => {
-    if (isDesktopViewport) {
-      setActiveDesktopRightPanel('commentary');
-      window.localStorage.setItem(DESKTOP_RIGHT_PANEL_STORAGE_KEY, JSON.stringify('commentary'));
-      return;
-    }
-
-    setActiveRightPanel('commentary');
-  }, [isDesktopViewport]);
-
   const closeRightPanel = React.useCallback(() => {
     if (isDesktopViewport) {
       setActiveDesktopRightPanel(null);
@@ -109,10 +121,6 @@ export const UIProvider = ({ children }) => {
 
     setActiveRightPanel(null);
   }, [isDesktopViewport]);
-
-  const toggleCommentary = React.useCallback(() => {
-    toggleRightPanel('commentary');
-  }, [toggleRightPanel]);
 
   const toggleTheme = React.useCallback(() => setIsDarkMode((prev) => !prev), []);
 
@@ -130,6 +138,7 @@ export const UIProvider = ({ children }) => {
     ? activeDesktopRightPanel === 'commentary'
     : activeRightPanel === 'commentary';
 
+  /** @type {UIContextValue} */
   const providerValue = React.useMemo(
     () => ({
       isDesktopViewport,
@@ -143,16 +152,10 @@ export const UIProvider = ({ children }) => {
       activeDesktopRightPanel,
       setActiveDesktopRightPanel,
       isRightPanelOpen,
-      openRightPanel,
       closeRightPanel,
       toggleRightPanel,
-      toggleCommentary,
       isDarkMode,
       toggleTheme,
-      isCompendiumOpen,
-      setIsCompendiumOpen,
-      isLexiconOpen,
-      setIsLexiconOpen,
       closeAllDrawers,
     }),
     [
@@ -162,20 +165,21 @@ export const UIProvider = ({ children }) => {
       activeRightPanel,
       activeDesktopRightPanel,
       isRightPanelOpen,
-      isDarkMode,
-      isCompendiumOpen,
-      isLexiconOpen,
       toggleSidebar,
-      openRightPanel,
       closeRightPanel,
       toggleRightPanel,
-      toggleCommentary,
+      isDarkMode,
       toggleTheme,
       closeAllDrawers,
     ],
   );
 
   return <UIContext.Provider value={providerValue}>{children}</UIContext.Provider>;
-};
+}
 
-export const useUI = () => useContext(UIContext);
+/**
+ * @returns {UIContextValue | undefined}
+ */
+export function useUI() {
+  return React.useContext(UIContext);
+}

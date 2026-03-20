@@ -1,5 +1,10 @@
 import React from 'react';
 
+/** @typedef {import('../../types').AppShellProps} AppShellProps */
+
+/**
+ * @param {AppShellProps} props
+ */
 function AppShell({
   header,
   sidebar,
@@ -8,6 +13,7 @@ function AppShell({
   isMobilePanelOpen = false,
   desktopGridColumns,
 }) {
+  /** @type {(React.CSSProperties & {'--desktop-frame-columns': string}) | undefined} */
   const desktopGridStyle = desktopGridColumns
     ? { '--desktop-frame-columns': desktopGridColumns }
     : undefined;

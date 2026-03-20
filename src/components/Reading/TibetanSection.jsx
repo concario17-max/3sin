@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * @param {{
+ *   tibetan: string,
+ *   pronunciation: string
+ * }} props
+ */
 function TibetanSection({ tibetan, pronunciation }) {
   if (!tibetan && !pronunciation) return null;
 
@@ -28,7 +34,7 @@ function TibetanSection({ tibetan, pronunciation }) {
               </p>
               <p className="font-inter text-[11px] uppercase leading-[2.15] tracking-[0.2em] text-gold-muted dark:text-gold-light/75 sm:text-[12px]">
                 {pronunciation.split('\n').map((line, index) => (
-                  <React.Fragment key={index}>
+                  <React.Fragment key={`${line}-${index}`}>
                     {line}
                     <br />
                   </React.Fragment>

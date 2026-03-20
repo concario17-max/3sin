@@ -1,5 +1,6 @@
 import React from 'react';
 import { buildReadingData, flattenParagraphs } from '../lib/parseThreeBodies';
+import { resolveStoredActiveParagraph } from '../lib/readingState';
 import { useUI } from '../context/UIContext';
 import Header from '../components/Header';
 import AppShell from '../components/ui/AppShell';
@@ -8,33 +9,33 @@ import LeftSidebar from './components/LeftSidebar';
 import ReadingPanel from './components/ReadingPanel';
 import RightSidebar from './components/RightSidebar';
 
-const chapters = buildReadingData();
+/** @typedef {import('../types').ReadingParagraph} ReadingParagraph */
+/** @typedef {import('../types').ReadingChapter} ReadingChapter */
+/** @typedef {import('../types').UIContextValue} UIContextValue */
+
 const ACTIVE_PARAGRAPH_STORAGE_KEY = 'three_body_active_verse';
 const LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY = 'tibet_active_verse';
 
+/**
+ * @param {ReadingParagraph | null} fallbackParagraph
+ * @param {ReadingParagraph[]} paragraphs
+ * @returns {ReadingParagraph | null}
+ */
 function loadStoredActiveParagraph(fallbackParagraph, paragraphs) {
-  try {
-    const saved =
-      localStorage.getItem(ACTIVE_PARAGRAPH_STORAGE_KEY) ??
-      localStorage.getItem(LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY);
+  const saved =
+    localStorage.getItem(ACTIVE_PARAGRAPH_STORAGE_KEY) ??
+    localStorage.getItem(LEGACY_ACTIVE_PARAGRAPH_STORAGE_KEY);
 
-    if (!saved) return fallbackParagraph;
-
-    const parsed = JSON.parse(saved);
-    const paragraphId =
-      typeof parsed === 'string'
-        ? parsed
-        : typeof parsed?.id === 'string'
-          ? parsed.id
-          : null;
-
-    if (!paragraphId) return fallbackParagraph;
-    return paragraphs.find((paragraph) => paragraph.id === paragraphId) ?? fallbackParagraph;
-  } catch {
-    return fallbackParagraph;
-  }
+  return resolveStoredActiveParagraph(saved, fallbackParagraph, paragraphs);
 }
 
+/**
+ * @param {{
+ *   kicker: string,
+ *   title: string,
+ *   description: string
+ * }} props
+ */
 function StatePanel({ kicker, title, description }) {
   return (
     <div className="flex h-full w-full flex-1 items-center justify-center p-6 sm:p-8">
@@ -56,17 +57,38 @@ function StatePanel({ kicker, title, description }) {
   );
 }
 
+function createFallbackUIContext() {
+  /** @type {UIContextValue} */
+  const fallback = {
+    isDesktopViewport: false,
+    isSidebarOpen: false,
+    setIsSidebarOpen: () => {},
+    isDesktopSidebarOpen: true,
+    setIsDesktopSidebarOpen: () => {},
+    toggleSidebar: () => {},
+    activeRightPanel: null,
+    setActiveRightPanel: () => {},
+    activeDesktopRightPanel: 'commentary',
+    setActiveDesktopRightPanel: () => {},
+    isRightPanelOpen: true,
+    closeRightPanel: () => {},
+    toggleRightPanel: () => {},
+    isDarkMode: false,
+    toggleTheme: () => {},
+    closeAllDrawers: () => {},
+  };
+
+  return fallback;
+}
+
 function TextPage() {
-  const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), []);
+  /** @type {ReadingChapter[]} */
+  const chapters = React.useMemo(() => buildReadingData(), []);
+  const flatParagraphs = React.useMemo(() => flattenParagraphs(chapters), [chapters]);
   const [activeParagraph, setActiveParagraph] = React.useState(() =>
     loadStoredActiveParagraph(flatParagraphs[0] ?? null, flatParagraphs),
   );
-  const ui = useUI() || {
-    isSidebarOpen: false,
-    activeRightPanel: null,
-    isDesktopSidebarOpen: true,
-    activeDesktopRightPanel: 'commentary',
-  };
+  const ui = useUI() ?? createFallbackUIContext();
 
   React.useEffect(() => {
     if (typeof activeParagraph?.id === 'string') {
@@ -81,14 +103,13 @@ function TextPage() {
   const hasNext = currentIndex !== -1 && currentIndex < flatParagraphs.length - 1;
 
   const desktopGridColumns = React.useMemo(
-    () =>
-      getDesktopFrameColumns(
-        ui.isDesktopSidebarOpen,
-        ui.activeDesktopRightPanel === 'commentary',
-      ),
+    () => getDesktopFrameColumns(ui.isDesktopSidebarOpen, ui.activeDesktopRightPanel === 'commentary'),
     [ui.activeDesktopRightPanel, ui.isDesktopSidebarOpen],
   );
 
+  /**
+   * @param {'prev' | 'next'} direction
+   */
   const handleNavigate = (direction) => {
     if (direction === 'prev' && hasPrev) setActiveParagraph(flatParagraphs[currentIndex - 1]);
     if (direction === 'next' && hasNext) setActiveParagraph(flatParagraphs[currentIndex + 1]);
@@ -101,7 +122,7 @@ function TextPage() {
         <LeftSidebar
           chapters={chapters}
           onSelectParagraph={setActiveParagraph}
-          activeParagraphId={activeParagraph?.id}
+          activeParagraphId={activeParagraph?.id ?? null}
         />
       }
       rightPanel={<RightSidebar activeParagraph={activeParagraph} />}
@@ -115,7 +136,6 @@ function TextPage() {
           <ReadingPanel
             verse={activeParagraph}
             globalIndex={currentIndex + 1}
-            hideAudio={true}
             onPrevious={hasPrev ? () => handleNavigate('prev') : null}
             onNext={hasNext ? () => handleNavigate('next') : null}
           />
