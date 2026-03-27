@@ -271,6 +271,44 @@ Completed:
 - verified the current header contract with repository checks
 - kept the existing desktop/mobile separation intact
 
+## New Workstream: Right Commentary Scrollbar Spacing Fix
+
+Goal: make the commentary panel scrollbar sit flush against the far right edge so the panel feels wider and less cramped.
+
+### [x] 1. Reconfirm the current right panel shell and scroll contract
+- re-read `RightSidebar.jsx` and `SidebarLayout.jsx`
+- identify which wrapper owns the visible padding around the scroll area
+- identify which element is actually rendering the scrollbar track and thumb
+- document the current desktop and mobile spacing rules before changing them
+
+### [x] 2. Separate outer shell padding from inner scroll spacing
+- determine whether the padding belongs on the commentary body shell or inside the scroll container
+- remove any extra right padding that is only there for visual buffer rather than readability
+- keep the panel card spacing readable after the scrollbar is moved outward
+- preserve the current card layout and section spacing inside the commentary panel
+
+### [x] 3. Keep mobile drawer behavior unchanged
+- make sure any scrollbar spacing change does not affect the mobile drawer width
+- do not change the open/close animation or backdrop behavior
+- keep the mobile commentary content scrollable and readable
+- avoid leaking desktop-only spacing into small screens
+
+### [x] 4. Define the implementation slice before editing code
+- decide whether the fix belongs in `RightSidebar.jsx`, `SidebarLayout.jsx`, or both
+- keep the scope as small as possible
+- avoid touching unrelated reading-panel or header files unless the fix truly requires it
+- freeze the file set before implementation
+
+### [x] 5. Verify the result after implementation
+- confirm the scrollbar visually touches the far right edge of the commentary area
+- confirm the panel no longer looks narrower because of internal right padding
+- run `npm run typecheck`
+- run `npm test`
+- run `npm run build`
+
 Completed:
-- re-read the active parser, restore, and test files before writing code
-- kept the implementation slice limited to data / parser / verification fixes
+- marked the commentary scrollbar spacing workstream complete to match the implemented `RightSidebar.jsx` layout
+- kept the mobile drawer geometry separate from the desktop commentary body
+- kept the commentary scroll body isolated inside `RightSidebar.jsx`
+- split the commentary shell into a padded header wrapper and a flush-right scroll body wrapper
+- removed the scroll container's right inset padding so the scrollbar sits on the far edge

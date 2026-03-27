@@ -1,26 +1,25 @@
 ﻿# STATE
 
 ## Current Task
-- Desktop header alignment fix complete.
+- Completed: Increase the right commentary panel's internal side gutters while keeping the scrollbar flush to the far right edge.
 
 ## Route
 - Route A
 
 ## Writer Slot
-- main: direct implementation for a single-file UI update.
+- main: single write lane for `src/pages/components/RightSidebar.jsx`.
 
 ## Contract Freeze
-- Align the desktop header internal controls to the fixed center reading column.
-- Keep the desktop header fixed in place when either sidebar is hidden.
-- Preserve mobile header behavior unchanged.
-- Prefer editing only `src/pages/TextPage.jsx`.
+- Increase the right commentary panel's internal side gutters while keeping the scrollbar flush to the far right edge.
+- Preserve mobile drawer behavior and desktop layout geometry.
+- Keep the change limited to the right sidebar shell and inner scroll spacing.
 - Avoid introducing any `any` or `unknown` types.
 
 ## Write Sets
-- main: `src/pages/TextPage.jsx`
+- implementation: `src/pages/components/RightSidebar.jsx`
 
 ## Reviewer
 - Not required for Route A
 
 ## Last Update
-- 2026-03-27 completed
+- 2026-03-27 right commentary internal gutter adjustment completed

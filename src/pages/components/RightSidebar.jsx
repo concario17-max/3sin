@@ -42,8 +42,9 @@ function CommentaryPanel({ activeParagraph }) {
     activeParagraph?.text.tibetan || 'No Tibetan source line is available for this paragraph.';
 
   return (
-    <div className="custom-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-1">
-      <section className="rounded-[1.5rem] border border-gold-border/25 bg-white/65 p-5 shadow-sm dark:border-dark-border/60 dark:bg-dark-surface/55">
+    <div className="custom-scrollbar flex flex-1 flex-col overflow-y-auto pr-0">
+      <div className="flex flex-col gap-4 px-8 pb-6 pt-0">
+        <section className="rounded-[1.5rem] border border-gold-border/25 bg-white/65 p-5 shadow-sm dark:border-dark-border/60 dark:bg-dark-surface/55">
         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-deep/70 dark:text-gold-light/65">
           Reading Lens
         </p>
@@ -54,34 +55,35 @@ function CommentaryPanel({ activeParagraph }) {
           Paragraph {activeParagraph?.id || '-'}를 읽을 때 참고하는 비교 패널입니다. 티벳
           원문, 영어 역문, 한국어 번역을 한 화면에서 함께 확인하도록 구성했습니다.
         </p>
-      </section>
+        </section>
 
-      <section className="rounded-[1.5rem] border border-gold-border/20 bg-gold-surface/45 p-5 dark:border-dark-border/60 dark:bg-dark-bg/30">
+        <section className="rounded-[1.5rem] border border-gold-border/20 bg-gold-surface/45 p-5 dark:border-dark-border/60 dark:bg-dark-bg/30">
         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-deep/70 dark:text-gold-light/65">
           Tibetan Anchor
         </p>
         <p className="mt-3 font-noto text-[14px] leading-7 text-text-primary dark:text-dark-text-primary">
           {tibetanText}
         </p>
-      </section>
+        </section>
 
-      <section className="rounded-[1.5rem] border border-gold-border/20 bg-white/60 p-5 dark:border-dark-border/60 dark:bg-dark-surface/50">
+        <section className="rounded-[1.5rem] border border-gold-border/20 bg-white/60 p-5 dark:border-dark-border/60 dark:bg-dark-surface/50">
         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-deep/70 dark:text-gold-light/65">
           English Reference
         </p>
         <p className="mt-3 font-korean text-[14px] leading-7 tracking-[-0.01em] text-text-primary dark:text-dark-text-primary">
           {englishText}
         </p>
-      </section>
+        </section>
 
-      <section className="rounded-[1.5rem] border border-gold-border/20 bg-white/60 p-5 dark:border-dark-border/60 dark:bg-dark-surface/50">
+        <section className="rounded-[1.5rem] border border-gold-border/20 bg-white/60 p-5 dark:border-dark-border/60 dark:bg-dark-surface/50">
         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold-deep/70 dark:text-gold-light/65">
           Korean Reference
         </p>
         <p className="mt-3 font-korean text-[14px] leading-7 text-text-primary dark:text-dark-text-primary">
           {koreanText}
         </p>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
@@ -104,15 +106,19 @@ function RightSidebar({ activeParagraph }) {
       widthClass="w-[90vw] sm:w-[400px]"
       className="dark:bg-dark-bg/95"
     >
-      <div className="relative flex h-full min-h-0 flex-col bg-white/80 p-6 dark:bg-dark-bg/95">
-        <div className="mb-6 flex shrink-0 items-center gap-2 border-b border-gold-border/30 pb-4">
-          <MessageSquareText className="h-5 w-5 text-[#A68B5C] dark:text-gold-light" />
-          <h2 className="text-sm font-bold tracking-wide text-[#1C2B36] dark:text-dark-text-primary">
-            Commentary
-          </h2>
+      <div className="relative flex h-full min-h-0 flex-col bg-white/80 dark:bg-dark-bg/95">
+        <div className="shrink-0 px-6 pt-6">
+          <div className="flex items-center gap-2 border-b border-gold-border/30 pb-4">
+            <MessageSquareText className="h-5 w-5 text-[#A68B5C] dark:text-gold-light" />
+            <h2 className="text-sm font-bold tracking-wide text-[#1C2B36] dark:text-dark-text-primary">
+              Commentary
+            </h2>
+          </div>
         </div>
 
-        <CommentaryPanel activeParagraph={activeParagraph} />
+        <div className="flex min-h-0 flex-1 flex-col pt-6">
+          <CommentaryPanel activeParagraph={activeParagraph} />
+        </div>
       </div>
     </SidebarLayout>
   );
