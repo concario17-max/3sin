@@ -5,9 +5,9 @@ import { useUI } from '../context/UIContext';
 import Header from '../components/Header';
 import AppShell from '../components/ui/AppShell';
 import { getDesktopFrameColumns } from '../components/ui/desktopFrame';
-import LeftSidebar from './components/LeftSidebar';
-import ReadingPanel from './components/ReadingPanel';
-import RightSidebar from './components/RightSidebar';
+import LeftSidebar from './components/LeftSidebar.jsx';
+import ReadingPanel from './components/ReadingPanel.jsx';
+import RightSidebar from './components/RightSidebar.jsx';
 
 /** @typedef {import('../types').ReadingParagraph} ReadingParagraph */
 /** @typedef {import('../types').ReadingChapter} ReadingChapter */
@@ -117,7 +117,7 @@ function TextPage() {
 
   return (
     <AppShell
-      header={<Header />}
+      header={<Header desktopGridColumns={desktopGridColumns} />}
       sidebar={
         <LeftSidebar
           chapters={chapters}

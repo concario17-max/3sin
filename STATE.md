@@ -1,27 +1,29 @@
 ﻿# STATE
 
 ## Current Task
-- Remove the chapter label block from the verse list header and clamp Tibetan text to one line.
+- Implementation complete for the research follow-up fixes.
 
 ## Route
-- Route A
+- Route B
 
 ## Writer Slot
-- main: direct implementation for a single-file layout cleanup.
+- main: planner only until contract_freeze and write_sets are recorded.
 
 ## Contract Freeze
-- Remove the `4장 기본의 삼신` chapter label block from the verse list header.
-- Clamp the Tibetan preview text in the verse rows to one line instead of two.
-- Keep the mobile drawer behavior unchanged.
-- Remove any leftover duplicated title block from the verse list area if present.
+- Clean up the left sidebar title and chapter/verse label contract in the rendered UI.
+- Normalize visible copy and remove mojibake/stale fallback text in the actively rendered UI.
+- Clean up parser contracts and chapter label normalization where it belongs in parser logic.
+- Harden reading-state restoration against stale saved values.
+- Expand parser/read-state regression coverage in the test harness.
 - Avoid introducing any `any` or `unknown` types.
-- Preserve existing desktop/mobile sidebar behavior and keep the chapter list and verse list readable.
+- Keep mobile drawer behavior unchanged while fixing desktop frame geometry.
 
 ## Write Sets
-- main: `src/components/Sidebar/SidebarVerseList.jsx`
+- worker_shared: `src/pages/components/LeftSidebar.jsx`, `src/components/Sidebar/SidebarChapterList.jsx`, `src/components/Sidebar/ChapterButton.jsx`, `src/components/Sidebar/ChapterGroup.jsx`, `src/components/Sidebar/SidebarVerseList.jsx`, `src/components/Sidebar/SidebarHeader.jsx`, `src/components/ui/SidebarLayout.jsx`, `src/components/Header.jsx`, `src/pages/components/RightSidebar.jsx`, `src/pages/components/ReadingPanel.jsx`, `src/index.css`, `plan.md`
+- worker_data: `src/lib/parseThreeBodiesCore.js`, `src/lib/parseThreeBodies.js`, `src/lib/readingState.js`, `tests/run-tests.js`, `src/types.d.ts`
 
 ## Reviewer
-- Not required for Route A
+- Pending assignment
 
 ## Last Update
 - 2026-03-27 completed

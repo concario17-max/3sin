@@ -27,8 +27,8 @@ function SidebarLayout({
     : `${widthClass} ${mobileTranslateClosed}`;
 
   const desktopStateClass = isDesktopOpen
-    ? 'xl:relative xl:inset-auto xl:top-0 xl:h-full xl:w-full xl:translate-x-0 xl:opacity-100 xl:pointer-events-auto xl:shadow-none'
-    : 'xl:relative xl:inset-auto xl:top-0 xl:h-full xl:w-full xl:translate-x-0 xl:opacity-0 xl:pointer-events-none xl:shadow-none xl:border-transparent';
+    ? 'xl:w-full xl:translate-x-0 xl:opacity-100 xl:pointer-events-auto'
+    : 'xl:w-0 xl:overflow-hidden xl:border-none xl:translate-x-0 xl:opacity-0 xl:pointer-events-none';
 
   return (
     <>
@@ -40,7 +40,7 @@ function SidebarLayout({
       )}
 
       <aside
-        className={`fixed bottom-0 top-16 ${placementClass} z-50 flex h-[calc(100dvh-64px)] flex-col overflow-hidden overscroll-contain bg-white/80 font-inter backdrop-blur-xl transition-all duration-300 dark:bg-dark-bg/95 xl:sticky xl:z-20 xl:min-w-0 ${borderClass} border-gold-primary/20 dark:border-dark-border/50 ${mobileStateClass} ${desktopStateClass} ${className}`}
+        className={`fixed bottom-0 top-16 ${placementClass} z-50 flex h-[calc(100dvh-64px)] flex-col overflow-hidden overscroll-contain bg-white/80 font-inter backdrop-blur-xl transition-[transform,opacity,width,border-color] duration-300 dark:bg-dark-bg/95 xl:sticky xl:top-16 xl:h-[calc(100vh-64px)] xl:z-20 xl:min-w-0 ${borderClass} border-gold-primary/20 dark:border-dark-border/50 ${mobileStateClass} ${desktopStateClass} ${className}`}
       >
         {title ? (
           <div className="flex shrink-0 items-center justify-between border-b border-gold-border/30 p-4 dark:border-dark-border/60 xl:hidden">

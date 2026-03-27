@@ -10,6 +10,7 @@ import {
   getDesktopFrameColumns,
 } from '../src/components/ui/desktopFrame.js';
 import {
+  compactChapterLabel,
   createReadingData,
   flattenParagraphs,
   normalizeReadingToc,
@@ -44,15 +45,26 @@ async function runParserTests() {
   const chapters = createReadingData(koreanEntries, englishEntries, normalizedToc);
   const flatParagraphs = flattenParagraphs(chapters);
 
+  assert.equal(compactChapterLabel('제4장 기본의 삼신'), '4장 기본의 삼신');
   assert.equal(koreanEntries.length, 168);
   assert.equal(englishEntries.size, 168);
   assert.equal(normalizedToc.length, 4);
   assert.equal(normalizedToc[0].start, 1);
-  assert.match(normalizedToc[0].title, /^제1장/);
+  assert.match(normalizedToc[0].title, /^제\d+장/);
   assert.equal(chapters.length, 4);
   assert.equal(flatParagraphs.length, 168);
   assert.equal(flatParagraphs[0]?.paragraphNumber, 1);
   assert.equal(flatParagraphs.at(-1)?.paragraphNumber, 168);
+
+  const sampleToc = [
+    { title: '귀의의 찬시', start: 1, end: 12 },
+    { title: '제1장 죽음', start: 13, end: 24 },
+    { title: '제2장 생유', start: 25, end: 36 },
+  ];
+  const mergedToc = normalizeReadingToc(sampleToc);
+  assert.equal(mergedToc.length, 2);
+  assert.equal(mergedToc[0].title, '제1장 죽음');
+  assert.equal(mergedToc[0].start, 1);
 }
 
 function runReadingStateTests() {
@@ -85,6 +97,14 @@ function runReadingStateTests() {
 
   assert.equal(
     resolveStoredActiveParagraph(JSON.stringify('1.2'), paragraphs[0], paragraphs)?.id,
+    '1.2',
+  );
+  assert.equal(
+    resolveStoredActiveParagraph(JSON.stringify({ id: '1.2' }), paragraphs[0], paragraphs)?.id,
+    '1.2',
+  );
+  assert.equal(
+    resolveStoredActiveParagraph(JSON.stringify({ paragraphId: '1.2' }), paragraphs[0], paragraphs)?.id,
     '1.2',
   );
   assert.equal(

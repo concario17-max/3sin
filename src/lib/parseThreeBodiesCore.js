@@ -28,7 +28,7 @@ function normalizeWhitespace(value) {
  * @returns {string}
  */
 export function compactChapterLabel(title) {
-  return title.replace(/^제\s*(\d+)장/, '$1장');
+  return title.replace(/^제\s*(\d+)\s*장/, '$1장');
 }
 
 /**

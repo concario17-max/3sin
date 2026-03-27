@@ -51,9 +51,8 @@ function CommentaryPanel({ activeParagraph }) {
           {activeParagraph?.chapterTitle || 'Commentary'}
         </h3>
         <p className="mt-3 font-korean text-[14px] leading-7 text-text-secondary dark:text-dark-text-secondary">
-          Paragraph {activeParagraph?.id || '-'}를 읽을 때 티베트 원문, 영어 역문, 한국어 번역을
-          나란히 두고 의미의 결을 비교해 보세요. 이 패널은 본문을 읽으면서 참고하는 보조 해설
-          창입니다.
+          Paragraph {activeParagraph?.id || '-'}를 읽을 때 참고하는 비교 패널입니다. 티벳
+          원문, 영어 역문, 한국어 번역을 한 화면에서 함께 확인하도록 구성했습니다.
         </p>
       </section>
 

@@ -31,14 +31,14 @@ function createFallbackUIContext() {
   };
 }
 
-function Header() {
+function Header({ desktopGridColumns = DESKTOP_FRAME_COLUMNS_DEFAULT }) {
   const ui = useUI() ?? createFallbackUIContext();
   const ThemeIcon = ui.isDarkMode ? SunMedium : MoonStar;
   const isCommentaryOpen =
     ui.activeRightPanel === 'commentary' || ui.activeDesktopRightPanel === 'commentary';
   /** @type {React.CSSProperties & {'--desktop-frame-columns': string}} */
   const desktopHeaderStyle = {
-    '--desktop-frame-columns': DESKTOP_FRAME_COLUMNS_DEFAULT,
+    '--desktop-frame-columns': desktopGridColumns,
   };
 
   const commentaryLabel = isCommentaryOpen ? 'Hide commentary panel' : 'Show commentary panel';

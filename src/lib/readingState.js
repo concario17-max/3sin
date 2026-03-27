@@ -11,12 +11,17 @@ export function resolveStoredActiveParagraph(savedValue, fallbackParagraph, para
     if (!savedValue) return fallbackParagraph;
 
     const parsed = JSON.parse(savedValue);
-    const paragraphId =
-      typeof parsed === 'string'
-        ? parsed
-        : typeof parsed?.id === 'string'
-          ? parsed.id
-          : null;
+    let paragraphId = null;
+
+    if (typeof parsed === 'string') {
+      paragraphId = parsed;
+    } else if (parsed && typeof parsed === 'object') {
+      if (typeof parsed.id === 'string') {
+        paragraphId = parsed.id;
+      } else if (typeof parsed.paragraphId === 'string') {
+        paragraphId = parsed.paragraphId;
+      }
+    }
 
     if (!paragraphId) return fallbackParagraph;
     return paragraphs.find((paragraph) => paragraph.id === paragraphId) ?? fallbackParagraph;
