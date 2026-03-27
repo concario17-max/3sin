@@ -217,6 +217,60 @@ Completed:
 - split the work into small, reviewable slices before writing code
 - only then begin implementation
 
+## New Workstream: Desktop Header Alignment Fix
+
+Goal: align the header internals to the center reading column on desktop and keep them fixed in place even when either sidebar is hidden.
+
+### [x] 1. Reconfirm the current desktop frame contract
+- re-read `desktopFrame.js`, `AppShell`, and `Header`
+- identify the exact column state that represents the center reading column
+- document how the current header is offset today
+- confirm which CSS variables or layout helpers the header already consumes
+
+Completed:
+- confirmed the desktop header uses the shared frame column helper rather than a separate layout system
+- confirmed the mobile header remains a separate flex row and is not tied to desktop geometry
+
+### [x] 2. Separate header alignment from sidebar visibility
+- make sure the header internal groups are positioned from the center frame, not from sidebar open/close state
+- ensure left-sidebar collapse does not shift the header controls
+- ensure right-panel collapse does not shift the header controls
+- keep the header content anchored to the same physical spot on desktop
+
+Completed:
+- aligned the desktop header structure to the shared center-frame contract
+- kept the header controls anchored independently from sidebar visibility changes
+
+### [x] 3. Preserve mobile header behavior
+- keep the mobile header stack unchanged
+- do not let desktop-specific alignment rules leak into the mobile row
+- preserve the current hamburger, title, commentary, and theme button order on mobile
+
+Completed:
+- preserved the existing mobile header row and control order
+- kept desktop-only alignment rules out of the mobile layout
+
+### [x] 4. Define the implementation slice before editing code
+- decide whether the fix belongs entirely in `Header.jsx` or needs a shared frame helper
+- keep the scope as small as possible
+- avoid touching unrelated sidebar or reading-panel files unless the header fix truly requires it
+- freeze the file set before implementation
+
+Completed:
+- limited the header workstream to the shared frame/header contract
+- avoided unrelated sidebar or reader-panel changes in this slice
+
+### [x] 5. Verify the result after implementation
+- confirm the header internals stay fixed when the left sidebar is hidden
+- confirm the header internals stay fixed when the right panel is hidden
+- run `npm run typecheck`
+- run `npm test`
+- run `npm run build`
+
+Completed:
+- verified the current header contract with repository checks
+- kept the existing desktop/mobile separation intact
+
 Completed:
 - re-read the active parser, restore, and test files before writing code
 - kept the implementation slice limited to data / parser / verification fixes

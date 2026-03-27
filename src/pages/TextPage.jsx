@@ -4,7 +4,7 @@ import { resolveStoredActiveParagraph } from '../lib/readingState';
 import { useUI } from '../context/UIContext';
 import Header from '../components/Header';
 import AppShell from '../components/ui/AppShell';
-import { getDesktopFrameColumns } from '../components/ui/desktopFrame';
+import { DESKTOP_FRAME_COLUMNS_DEFAULT, getDesktopFrameColumns } from '../components/ui/desktopFrame';
 import LeftSidebar from './components/LeftSidebar.jsx';
 import ReadingPanel from './components/ReadingPanel.jsx';
 import RightSidebar from './components/RightSidebar.jsx';
@@ -117,7 +117,7 @@ function TextPage() {
 
   return (
     <AppShell
-      header={<Header desktopGridColumns={desktopGridColumns} />}
+      header={<Header desktopGridColumns={DESKTOP_FRAME_COLUMNS_DEFAULT} />}
       sidebar={
         <LeftSidebar
           chapters={chapters}
