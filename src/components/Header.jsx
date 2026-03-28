@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpenText, Menu, MessageSquareText, MoonStar, SunMedium } from 'lucide-react';
+import { Menu, MessageSquareText, MoonStar, Orbit, SunMedium } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import { DESKTOP_FRAME_COLUMNS_DEFAULT } from './ui/desktopFrame';
 
@@ -57,7 +57,7 @@ function Header({ desktopGridColumns = DESKTOP_FRAME_COLUMNS_DEFAULT }) {
           </button>
 
           <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 text-gold-primary dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light">
-            <BookOpenText className="h-5 w-5" />
+            <Orbit className="h-5 w-5" />
           </span>
           <span className="truncate font-korean text-[13px] font-semibold tracking-[0.01em] text-charcoal-main dark:text-dark-text-primary sm:text-[16px]">
             {TITLE_TEXT}
@@ -99,7 +99,7 @@ function Header({ desktopGridColumns = DESKTOP_FRAME_COLUMNS_DEFAULT }) {
             </button>
 
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 text-gold-primary dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light">
-              <BookOpenText className="h-5 w-5" />
+              <Orbit className="h-5 w-5" />
             </span>
             <span className="truncate font-korean text-[16px] font-semibold tracking-[0.01em] text-charcoal-main dark:text-dark-text-primary">
               {TITLE_TEXT}

@@ -1,24 +1,24 @@
 # STATE
 
 ## Current Task
-- Completed: Regenerate the build output so the browser tab title matches the updated `index.html`.
+- Completed: Update the header leading icon to a more abstract geometric symbol.
 
 ## Route
 - Route A
 
 ## Writer Slot
-- main: single write lane for build output regeneration.
+- main: single write lane for `src/components/Header.jsx`.
 
 ## Contract Freeze
-- Rebuild the app so `dist/index.html` reflects the plain Korean tab title from `index.html`.
-- Keep the source HTML unchanged.
+- Swap the leading title icon to an abstract geometric glyph.
+- Keep the header layout and controls unchanged.
 - Avoid introducing any `any` or `unknown` types.
 
 ## Write Sets
-- implementation: build output regeneration
+- implementation: `src/components/Header.jsx`
 
 ## Reviewer
 - Not required for Route A
 
 ## Last Update
-- 2026-03-28 build output regeneration completed for tab title sync
+- 2026-03-28 header icon abstraction completed
