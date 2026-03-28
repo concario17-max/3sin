@@ -1,25 +1,25 @@
-﻿# STATE
+# STATE
 
 ## Current Task
-- Completed: Increase the right commentary panel's internal side gutters while keeping the scrollbar flush to the far right edge.
+- Completed: Update the header title text and font readability in `src/components/Header.jsx`.
 
 ## Route
 - Route A
 
 ## Writer Slot
-- main: single write lane for `src/pages/components/RightSidebar.jsx`.
+- main: single write lane for `src/components/Header.jsx`.
 
 ## Contract Freeze
-- Increase the right commentary panel's internal side gutters while keeping the scrollbar flush to the far right edge.
-- Preserve mobile drawer behavior and desktop layout geometry.
-- Keep the change limited to the right sidebar shell and inner scroll spacing.
+- Replace the header title text with plain Korean text.
+- Use a more readable font style for the header title on mobile and desktop.
+- Keep the header layout and controls unchanged.
 - Avoid introducing any `any` or `unknown` types.
 
 ## Write Sets
-- implementation: `src/pages/components/RightSidebar.jsx`
+- implementation: `src/components/Header.jsx`
 
 ## Reviewer
 - Not required for Route A
 
 ## Last Update
-- 2026-03-27 right commentary internal gutter adjustment completed
+- 2026-03-28 header title text and font cleanup completed

@@ -59,7 +59,7 @@ function Header({ desktopGridColumns = DESKTOP_FRAME_COLUMNS_DEFAULT }) {
           <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 text-gold-primary dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light">
             <BookOpenText className="h-5 w-5" />
           </span>
-          <span className="truncate font-serif text-[13px] font-bold tracking-[0.03em] text-charcoal-main dark:text-dark-text-primary sm:text-[16px]">
+          <span className="truncate font-korean text-[13px] font-semibold tracking-[0.01em] text-charcoal-main dark:text-dark-text-primary sm:text-[16px]">
             {TITLE_TEXT}
           </span>
         </div>
@@ -101,7 +101,7 @@ function Header({ desktopGridColumns = DESKTOP_FRAME_COLUMNS_DEFAULT }) {
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-primary/20 bg-white/70 text-gold-primary dark:border-dark-border/60 dark:bg-dark-surface/60 dark:text-gold-light">
               <BookOpenText className="h-5 w-5" />
             </span>
-            <span className="truncate font-serif text-[16px] font-bold tracking-[0.03em] text-charcoal-main dark:text-dark-text-primary">
+            <span className="truncate font-korean text-[16px] font-semibold tracking-[0.01em] text-charcoal-main dark:text-dark-text-primary">
               {TITLE_TEXT}
             </span>
           </div>
