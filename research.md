@@ -427,3 +427,32 @@ The repo has type checking, build, and a small Node test harness, but no linter.
 - a centered reading column with strong typography and card-based sections
 
 The architecture is reasonably clean, but the main maintenance risks are encoding damage, layout coupling, and limited automated coverage for visual behavior.
+
+## Browser Visibility Investigation
+
+I also checked why the browser window was not appearing reliably when the workspace tried to open a preview.
+
+### What I observed
+
+- `Start-Process` against Edge did spawn `msedge.exe` processes, but the visible window did not reliably surface in the Codex desktop.
+- Multiple attempts to launch the Vite dev server in the background did not leave a stable listener on `127.0.0.1:4315` in this session.
+- `netstat` showed no active listener when the browser was reported as "not visible".
+- The build pipeline itself was healthy: `npm run build` completed successfully.
+
+### What that means
+
+- The missing browser was not a rendering bug in the app itself.
+- It was an execution or focus issue around the preview process and window surfacing.
+- The app can still build correctly while the preview server is not persisted or not surfaced to the desktop.
+
+### Title source note
+
+- The browser tab title is controlled by the source [`index.html`](C:/Users/roadsea/Desktop/3SIN/index.html), not by the built `dist/index.html` file.
+- A manual edit to `dist/index.html` is temporary and will be overwritten by the next production build.
+- The visible header title inside [`src/components/Header.jsx`](C:/Users/roadsea/Desktop/3SIN/src/components/Header.jsx) is independent from the browser tab title.
+
+### Practical conclusion
+
+- If the goal is to inspect the app visually, the preview server needs to stay open in a way that persists in this environment.
+- If the goal is to clean the browser tab title, the source [`index.html`](C:/Users/roadsea/Desktop/3SIN/index.html) must be fixed directly.
+- If the goal is only documentation, the browser-launch failure is best treated as an environment or window-management issue rather than an app code regression.
